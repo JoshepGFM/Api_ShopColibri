@@ -1,0 +1,19 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace API_ShopColibri.Models;
+
+public partial class FechaIngre
+{
+    public int Id { get; set; }
+
+    public DateTime Fecha { get; set; }
+
+    public int Entrada { get; set; }
+
+    public int EmpaqueId { get; set; }
+
+    public virtual Empaque Empaque { get; set; } = null!;
+
+    public virtual ICollection<Usuario> UsuarioIdUsuarios { get; } = new List<Usuario>();
+}

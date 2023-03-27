@@ -10,6 +10,8 @@ using API_ShopColibri.Models.DTO;
 using API_ShopColibri.Attributes;
 using Microsoft.AspNetCore.Http.HttpResults;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Net;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace API_ShopColibri.Controllers
 {
@@ -19,6 +21,7 @@ namespace API_ShopColibri.Controllers
     public class UsuariosController : ControllerBase
     {
         private readonly ShopColibriContext _context;
+        private readonly AutoMapper.Mapper _mapper;
         public Tools.Crypto MyCrypto { get; set; }
 
         public UsuariosController(ShopColibriContext context)
@@ -257,10 +260,10 @@ namespace API_ShopColibri.Controllers
             return NoContent();
         }
 
-        // POST: api/Usuarios
+        // POST: api/Usuarios?s=1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Usuario>> PostUsuario(Usuarios usuario)
+        public async Task<ActionResult<Usuario>> PostUsuario(Usuarios usuario, int s)
         {
             string EncriptedPass = MyCrypto.EncriptarEnUnSentido(usuario.Contrasennia);
 
@@ -276,7 +279,9 @@ namespace API_ShopColibri.Controllers
                 NewItem.EmailResp = usuario.EmailResp;
                 NewItem.Telefono = usuario.Telefono;
                 NewItem.TusuarioId = usuario.TusuarioId;
-                NewItem.Estado = true;
+                if (s == 1) { NewItem.Estado = true; }
+                else { NewItem.Estado = false; }
+                
 
             if (_context.Usuarios == null)
           {
@@ -288,22 +293,58 @@ namespace API_ShopColibri.Controllers
 
             return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
         }
+        //PATCH: api/Usuarios/ModificarUsuario?id=1
+        [HttpPatch("ModificarUsuario")]
+        public async Task<ActionResult> PatchUsuario(int id)
+        {
+            var user = await _context.Usuarios.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            string EncryPass = MyCrypto.EncriptarEnUnSentido(user.Contrasennia);
+            user.Contrasennia = EncryPass;
+            if (user.Estado == false)
+            {
+                user.Estado = true;
+            }
+            _context.Usuarios.Add(user);
+
+            _context.Entry(user).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!UsuarioExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
 
         // DELETE: api/Usuarios/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {
-            if (_context.Usuarios == null)
+            var user = await _context.Usuarios.FindAsync(id);
+            if (user == null)
             {
                 return NotFound();
             }
-            var usuario = await _context.Usuarios.FindAsync(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
+            user.Estado = false;
+            _context.Usuarios.Add(user);
 
-            _context.Usuarios.Remove(usuario);
+            _context.Entry(user).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
             return NoContent();

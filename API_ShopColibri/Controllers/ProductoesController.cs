@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
+using API_ShopColibri.Models.DTO;
 
 namespace API_ShopColibri.Controllers
 {
@@ -49,6 +50,76 @@ namespace API_ShopColibri.Controllers
             return producto;
         }
 
+        // GET: api/Productoes/BuscarProducto?Buscar=m
+        [HttpGet("BuscarProducto")]
+        public ActionResult<IEnumerable<Producto>> GetBuscarProducto(string? Buscar)
+        {
+            if (_context.Productos == null)
+            {
+                return NotFound();
+            }
+            if (string.IsNullOrEmpty(Buscar))
+            {
+                var query = (from p in _context.Productos
+                             select new
+                             {
+                                 codigo = p.Codigo,
+                                 nombre = p.Nombre,
+                                 descripcion = p.Descripcion
+                             }).ToList();
+
+                List<Producto> list = new List<Producto>();
+
+                foreach (var item in query)
+                {
+                    Producto NewItem = new Producto();
+
+                    NewItem.Codigo = item.codigo;
+                    NewItem.Nombre = item.nombre;
+                    NewItem.Descripcion = item.descripcion;
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return NotFound();
+                }
+
+                return list;
+            }
+            else
+            {
+                var query = (from p in _context.Productos
+                             where p.Nombre.Contains(Buscar)
+                             select new
+                             {
+                                 codigo = p.Codigo,
+                                 nombre = p.Nombre,
+                                 descripcion = p.Descripcion
+                             }).ToList();
+
+                List<Producto> list = new List<Producto>();
+
+                foreach (var item in query)
+                {
+                    Producto NewItem = new Producto();
+
+                    NewItem.Codigo = item.codigo;
+                    NewItem.Nombre = item.nombre;
+                    NewItem.Descripcion = item.descripcion;
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return NotFound();
+                }
+
+                return list;
+            }
+        }
         // PUT: api/Productoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

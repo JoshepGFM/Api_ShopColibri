@@ -31,6 +31,81 @@ namespace API_ShopColibri.Controllers
             return await _context.Empaques.ToListAsync();
         }
 
+        // GET: api/Empaques/BuscarEmpaque?Buscar=m
+        [HttpGet("BuscarEmpaque")]
+        public ActionResult<IEnumerable<Empaque>> GetBuscarEmpaque(string? Buscar)
+        {
+            if (_context.Productos == null)
+            {
+                return NotFound();
+            }
+            if (string.IsNullOrEmpty(Buscar))
+            {
+                var query = (from e in _context.Empaques
+                             select new
+                             {
+                                 id = e.Id,
+                                 nombre = e.Nombre,
+                                 tamannio = e.Tamannio,
+                                 stock = e.Stock
+                             }).ToList();
+
+                List<Empaque> list = new List<Empaque>();
+
+                foreach (var item in query)
+                {
+                    Empaque NewItem = new Empaque();
+
+                    NewItem.Id = item.id;
+                    NewItem.Nombre = item.nombre;
+                    NewItem.Tamannio = item.tamannio;
+                    NewItem.Stock = item.stock;
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return NotFound();
+                }
+
+                return list;
+            }
+            else
+            {
+                var query = (from e in _context.Empaques
+                             where e.Nombre.Contains(Buscar)
+                             select new
+                             {
+                                 id = e.Id,
+                                 nombre = e.Nombre,
+                                 tamannio = e.Tamannio,
+                                 stock = e.Stock
+                             }).ToList();
+
+                List<Empaque> list = new List<Empaque>();
+
+                foreach (var item in query)
+                {
+                    Empaque NewItem = new Empaque();
+
+                    NewItem.Id = item.id;
+                    NewItem.Nombre = item.nombre;
+                    NewItem.Tamannio = item.tamannio;
+                    NewItem.Stock = item.stock;
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return NotFound();
+                }
+
+                return list;
+            }
+        }
+
         // GET: api/Empaques/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empaque>> GetEmpaque(int id)

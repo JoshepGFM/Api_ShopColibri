@@ -9,5 +9,7 @@ public partial class Imagen
 
     public string Imagen1 { get; set; } = null!;
 
-    public virtual ICollection<Inventario> Inventarios { get; } = new List<Inventario>();
+    public int InventarioId { get; set; }
+
+    public virtual Inventario Inventario { get; set; } = null!;
 }

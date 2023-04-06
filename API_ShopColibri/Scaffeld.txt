@@ -1,1 +1,1 @@
-Scaffold-DbContext -f "SERVER=JOSHEP\MSSQLSERVER01; DATABASE=ShopColibri;INTEGRATED SECURITY=TRUE; User Id=;Password=" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models
+Scaffold-DbContext -f "SERVER=JOSHEP\MSSQLSERVER01; DATABASE=ShopColibri;INTEGRATED SECURITY=TRUE; Encrypt=False; User Id=;Password=" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

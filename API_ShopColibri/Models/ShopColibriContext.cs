@@ -120,6 +120,11 @@ public partial class ShopColibriContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("Imagen");
+
+            entity.HasOne(d => d.Inventario).WithMany(p => p.Imagens)
+                .HasForeignKey(d => d.InventarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKInventario649567");
         });
 
         modelBuilder.Entity<Inventario>(entity =>
@@ -139,11 +144,6 @@ public partial class ShopColibriContext : DbContext
                 .HasForeignKey(d => d.EmpaqueId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKInventario106659");
-
-            entity.HasOne(d => d.Imagen).WithMany(p => p.Inventarios)
-                .HasForeignKey(d => d.ImagenId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FKInventario649567");
 
             entity.HasOne(d => d.ProductoCodigoNavigation).WithMany(p => p.Inventarios)
                 .HasForeignKey(d => d.ProductoCodigo)

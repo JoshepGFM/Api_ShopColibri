@@ -5,6 +5,11 @@ namespace API_ShopColibri.Models;
 
 public partial class Empaque
 {
+    public Empaque()
+    {
+        FechaIngres = new HashSet<FechaIngre>();
+        Inventarios = new HashSet<Inventario>();
+    }
     public int Id { get; set; }
 
     public string Nombre { get; set; } = null!;

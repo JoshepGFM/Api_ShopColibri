@@ -1,12 +1,12 @@
-﻿using API_ShopColibri.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace API_ShopColibri.Models;
 
 public partial class Usuario
 {
-    public Usuario() { 
+    public Usuario()
+    {
         Pedidos = new HashSet<Pedido>();
         Registros = new HashSet<Registro>();
         ControlMarmitaCodigos = new HashSet<ControlMarmitum>();

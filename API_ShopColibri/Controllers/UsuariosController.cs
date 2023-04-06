@@ -331,20 +331,47 @@ namespace API_ShopColibri.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Usuarios/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUsuario(int id)
+        // DELETE: api/Usuarios/Validar?id=25
+        [HttpDelete("Validar")]
+        public async Task<IActionResult> ValidarUsuario(int id)
         {
             var user = await _context.Usuarios.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            user.Estado = false;
+            if (user.Estado == true)
+            {
+                user.Estado = false;
+            }
+            else
+            {
+                user.Estado = true;
+            }
             _context.Usuarios.Add(user);
 
             _context.Entry(user).State = EntityState.Modified;
 
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/Usuarios/5
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUsuario(int id)
+        {
+            if (_context.Usuarios == null)
+            {
+                return NotFound();
+            }
+            var producto = await _context.Usuarios.FindAsync(id);
+            if (producto == null)
+            {
+                return NotFound();
+            }
+
+            _context.Usuarios.Remove(producto);
             await _context.SaveChangesAsync();
 
             return NoContent();

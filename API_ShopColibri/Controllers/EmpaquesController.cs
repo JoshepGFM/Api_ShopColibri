@@ -6,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
+using API_ShopColibri.Attributes;
 
 namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class EmpaquesController : ControllerBase
     {
         private readonly ShopColibriContext _context;
@@ -31,9 +33,9 @@ namespace API_ShopColibri.Controllers
             return await _context.Empaques.ToListAsync();
         }
 
-        // GET: api/Empaques/BuscarEmpaque?Buscar=m
+        // GET: api/Empaques/BuscarEmpaque?Buscar=d&Stock=true
         [HttpGet("BuscarEmpaque")]
-        public ActionResult<IEnumerable<Empaque>> GetBuscarEmpaque(string? Buscar)
+        public ActionResult<IEnumerable<Empaque>> GetBuscarEmpaque(string? Buscar, bool Stock)
         {
             if (_context.Productos == null)
             {
@@ -41,40 +43,77 @@ namespace API_ShopColibri.Controllers
             }
             if (string.IsNullOrEmpty(Buscar))
             {
-                var query = (from e in _context.Empaques
-                             select new
-                             {
-                                 id = e.Id,
-                                 nombre = e.Nombre,
-                                 tamannio = e.Tamannio,
-                                 stock = e.Stock
-                             }).ToList();
-
-                List<Empaque> list = new List<Empaque>();
-
-                foreach (var item in query)
+                if (Stock)
                 {
-                    Empaque NewItem = new Empaque();
+                    var query = (from e in _context.Empaques
+                                 where e.Stock > 0
+                                 select new
+                                 {
+                                     id = e.Id,
+                                     nombre = e.Nombre,
+                                     tamannio = e.Tamannio,
+                                     stock = e.Stock
+                                 }).ToList();
 
-                    NewItem.Id = item.id;
-                    NewItem.Nombre = item.nombre;
-                    NewItem.Tamannio = item.tamannio;
-                    NewItem.Stock = item.stock;
+                    List<Empaque> list = new List<Empaque>();
 
-                    list.Add(NewItem);
+                    foreach (var item in query)
+                    {
+                        Empaque NewItem = new Empaque();
+
+                        NewItem.Id = item.id;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Tamannio = item.tamannio;
+                        NewItem.Stock = item.stock;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
                 }
-
-                if (list == null)
+                else
                 {
-                    return NotFound();
-                }
+                    var query = (from e in _context.Empaques
+                                 where e.Stock < 1
+                                 select new
+                                 {
+                                     id = e.Id,
+                                     nombre = e.Nombre,
+                                     tamannio = e.Tamannio,
+                                     stock = e.Stock
+                                 }).ToList();
 
-                return list;
+                    List<Empaque> list = new List<Empaque>();
+
+                    foreach (var item in query)
+                    {
+                        Empaque NewItem = new Empaque();
+
+                        NewItem.Id = item.id;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Tamannio = item.tamannio;
+                        NewItem.Stock = item.stock;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
             }
             else
             {
                 var query = (from e in _context.Empaques
-                             where e.Nombre.Contains(Buscar)
+                             where (e.Nombre + " " + e.Tamannio).Contains(Buscar)
                              select new
                              {
                                  id = e.Id,

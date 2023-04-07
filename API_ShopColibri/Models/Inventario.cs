@@ -5,11 +5,6 @@ namespace API_ShopColibri.Models;
 
 public partial class Inventario
 {
-    public Inventario()
-    {
-        Imagens = new HashSet<Imagen>();
-        PedidosCodigos = new HashSet<Pedido>();
-    }
     public int Id { get; set; }
 
     public DateTime Fecha { get; set; }

@@ -19,11 +19,11 @@ public partial class Inventario
 
     public int EmpaqueId { get; set; }
 
-    public virtual Empaque Empaque { get; set; } = null!;
+    public virtual Empaque? Empaque { get; set; } = null!;
 
     public virtual ICollection<Imagen> Imagens { get; } = new List<Imagen>();
 
-    public virtual Producto ProductoCodigoNavigation { get; set; } = null!;
+    public virtual Producto? ProductoCodigoNavigation { get; set; } = null!;
 
     public virtual ICollection<Pedido> PedidosCodigos { get; } = new List<Pedido>();
 }

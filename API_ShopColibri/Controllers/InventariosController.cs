@@ -6,11 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
+using API_ShopColibri.Attributes;
+using API_ShopColibri.Models.DTO;
 
 namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class InventariosController : ControllerBase
     {
         private readonly ShopColibriContext _context;
@@ -48,6 +51,208 @@ namespace API_ShopColibri.Controllers
 
             return inventario;
         }
+
+        //GET: api/Inventarios/BusquedaIventario?buscar=mie&estado=false
+        [HttpGet("BusquedaIventario")]
+        public ActionResult<IEnumerable<Inventarios>> GetUserBuscar(string? buscar, bool estado)
+        {
+
+            if (!string.IsNullOrEmpty(buscar))
+            {
+                if (estado)
+                {
+                    var query = (from i in _context.Inventarios
+                                 join p in _context.Productos on
+                                 i.ProductoCodigo equals p.Codigo
+                                 join e in _context.Empaques on
+                                 i.EmpaqueId equals e.Id
+                                 where (p.Nombre + " " + e.Nombre + " " + e.Tamannio).Contains(buscar) && i.Stock > 0
+                                 select new
+                                 {
+                                     id = i.Id,
+                                     fecha = i.Fecha,
+                                     stock = i.Stock,
+                                     precioUn = i.PrecioUn,
+                                     origen = i.Origen,
+                                     productoCodigo = i.ProductoCodigo,
+                                     empaqueId = i.EmpaqueId,
+                                     nombrePro = p.Nombre,
+                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                 }).ToList();
+
+                    List<Inventarios> list = new List<Inventarios>();
+
+                    foreach (var item in query)
+                    {
+                        Inventarios NewItem = new Inventarios();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Stock = item.stock;
+                        NewItem.PrecioUn = item.precioUn;
+                        NewItem.Origen = item.origen;
+                        NewItem.ProductoCodigo = item.productoCodigo;
+                        NewItem.EmpaqueId = item.empaqueId;
+                        NewItem.NombrePro = item.nombrePro;
+                        NewItem.NombreEmp = item.nombreEmp;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
+                else
+                {
+                    var query = (from i in _context.Inventarios
+                                 join p in _context.Productos on
+                                 i.ProductoCodigo equals p.Codigo
+                                 join e in _context.Empaques on
+                                 i.EmpaqueId equals e.Id
+                                 where (p.Nombre + " " + e.Nombre + " " + e.Tamannio).Contains(buscar) && i.Stock <= 0
+                                 select new
+                                 {
+                                     id = i.Id,
+                                     fecha = i.Fecha,
+                                     stock = i.Stock,
+                                     precioUn = i.PrecioUn,
+                                     origen = i.Origen,
+                                     productoCodigo = i.ProductoCodigo,
+                                     empaqueId = i.EmpaqueId,
+                                     nombrePro = p.Nombre,
+                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                 }).ToList();
+
+                    List<Inventarios> list = new List<Inventarios>();
+
+                    foreach (var item in query)
+                    {
+                        Inventarios NewItem = new Inventarios();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Stock = item.stock;
+                        NewItem.PrecioUn = item.precioUn;
+                        NewItem.Origen = item.origen;
+                        NewItem.ProductoCodigo = item.productoCodigo;
+                        NewItem.EmpaqueId = item.empaqueId;
+                        NewItem.NombrePro = item.nombrePro;
+                        NewItem.NombreEmp = item.nombreEmp;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
+            }
+            else
+            {
+                if (estado)
+                {
+                    var query = (from i in _context.Inventarios
+                                 join p in _context.Productos on
+                                 i.ProductoCodigo equals p.Codigo
+                                 join e in _context.Empaques on
+                                 i.EmpaqueId equals e.Id
+                                 where i.Stock > 0
+                                 select new
+                                 {
+                                     id = i.Id,
+                                     fecha = i.Fecha,
+                                     stock = i.Stock,
+                                     precioUn = i.PrecioUn,
+                                     origen = i.Origen,
+                                     productoCodigo = i.ProductoCodigo,
+                                     empaqueId = i.EmpaqueId,
+                                     nombrePro = p.Nombre,
+                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                 }).ToList();
+
+                    List<Inventarios> list = new List<Inventarios>();
+
+                    foreach (var item in query)
+                    {
+                        Inventarios NewItem = new Inventarios();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Stock = item.stock;
+                        NewItem.PrecioUn = item.precioUn;
+                        NewItem.Origen = item.origen;
+                        NewItem.ProductoCodigo = item.productoCodigo;
+                        NewItem.EmpaqueId = item.empaqueId;
+                        NewItem.NombrePro = item.nombrePro;
+                        NewItem.NombreEmp = item.nombreEmp;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
+                else
+                {
+                    var query = (from i in _context.Inventarios
+                                 join p in _context.Productos on
+                                 i.ProductoCodigo equals p.Codigo
+                                 join e in _context.Empaques on
+                                 i.EmpaqueId equals e.Id
+                                 where i.Stock <= 0
+                                 select new
+                                 {
+                                     id = i.Id,
+                                     fecha = i.Fecha,
+                                     stock = i.Stock,
+                                     precioUn = i.PrecioUn,
+                                     origen = i.Origen,
+                                     productoCodigo = i.ProductoCodigo,
+                                     empaqueId = i.EmpaqueId,
+                                     nombrePro = p.Nombre,
+                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                 }).ToList();
+
+                    List<Inventarios> list = new List<Inventarios>();
+
+                    foreach (var item in query)
+                    {
+                        Inventarios NewItem = new Inventarios();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Stock = item.stock;
+                        NewItem.PrecioUn = item.precioUn;
+                        NewItem.Origen = item.origen;
+                        NewItem.ProductoCodigo = item.productoCodigo;
+                        NewItem.EmpaqueId = item.empaqueId;
+                        NewItem.NombrePro = item.nombrePro;
+                        NewItem.NombreEmp = item.nombreEmp;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
+            }
+        }
+
 
         // PUT: api/Inventarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754

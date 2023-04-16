@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
+using API_ShopColibri.Attributes;
+using System.Drawing;
+using Google.Apis.Drive.v3;
 
 namespace API_ShopColibri.Controllers
 {
@@ -14,10 +17,12 @@ namespace API_ShopColibri.Controllers
     public class ImagensController : ControllerBase
     {
         private readonly ShopColibriContext _context;
+        private Drive Dv;
 
         public ImagensController(ShopColibriContext context)
         {
             _context = context;
+            Dv = new Drive();
         }
 
         // GET: api/Imagens
@@ -119,5 +124,28 @@ namespace API_ShopColibri.Controllers
         {
             return (_context.Imagens?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        #region MetodosDrive
+
+        [HttpPost("GuardarImagen")]
+        public async Task<string> GuardarImagen([FromForm] ImagenDrive Imagen)
+        {
+            string ruta = String.Empty;
+            if (Imagen.Archivo.Length > 0)
+            {
+                var nombreArchivo = Guid.NewGuid().ToString()+".jpg";
+                ruta = $"Imagenes/{nombreArchivo}";
+                using(var stream = new FileStream(ruta, FileMode.Create))
+                {
+                    await Imagen.Archivo.CopyToAsync(stream);
+                }
+                string IdFol = Dv.ValidarFolder();
+                Dv.SubirArchivo(ruta, IdFol);
+
+                System.IO.File.Delete(ruta);
+            }
+            return ruta;
+        }
+        #endregion
     }
 }

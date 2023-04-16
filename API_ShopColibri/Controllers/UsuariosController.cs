@@ -91,100 +91,195 @@ namespace API_ShopColibri.Controllers
             return list;
         }
 
-        //GET: api/Usuarios/GetUsuarioBuscar?buscar=adm&estado=true
+        //GET: api/Usuarios/GetUsuarioBuscar?buscar=dwf&estado=true&Cliente=true
         [HttpGet("GetUsuarioBuscar")]
-        public ActionResult<IEnumerable<Usuarios>> GetUserBuscar(string? buscar, bool estado)
+        public ActionResult<IEnumerable<Usuarios>> GetUserBuscar(string? buscar, bool estado, bool Cliente)
         {
-            
-            if(string.IsNullOrEmpty(buscar))
+            if (Cliente)
             {
-                var query = (from u in _context.Usuarios
-                             join t in _context.Tusuarios on
-                             u.TusuarioId equals t.Id
-                             where u.Estado == estado
-                             select new
-                             {
-                                 idusuario = u.IdUsuario,
-                                 nombre = u.Nombre,
-                                 apellido1 = u.Apellido1,
-                                 apellido2 = u.Apellido2,
-                                 email = u.Email,
-                                 emailResp = u.EmailResp,
-                                 telefono = u.Telefono,
-                                 tUsuario = t.Id,
-                                 tipo = t.Tipo
-                             }).ToList();
-
-                List<Usuarios> list = new List<Usuarios>();
-
-                foreach (var item in query)
+                if (string.IsNullOrEmpty(buscar))
                 {
-                    Usuarios NewItem = new Usuarios();
+                    var query = (from u in _context.Usuarios
+                                 join t in _context.Tusuarios on
+                                 u.TusuarioId equals t.Id
+                                 where u.Estado == estado
+                                 select new
+                                 {
+                                     idusuario = u.IdUsuario,
+                                     nombre = u.Nombre,
+                                     apellido1 = u.Apellido1,
+                                     apellido2 = u.Apellido2,
+                                     email = u.Email,
+                                     emailResp = u.EmailResp,
+                                     telefono = u.Telefono,
+                                     tUsuario = t.Id,
+                                     tipo = t.Tipo
+                                 }).ToList();
 
-                    NewItem.IdUsuario = item.idusuario;
-                    NewItem.Nombre = item.nombre;
-                    NewItem.Apellido1 = item.apellido1;
-                    NewItem.Apellido2 = item.apellido2;
-                    NewItem.Email = item.email;
-                    NewItem.EmailResp = item.emailResp;
-                    NewItem.Telefono = item.telefono;
-                    NewItem.TusuarioId = item.tUsuario;
-                    NewItem.Tipo = item.tipo;
+                    List<Usuarios> list = new List<Usuarios>();
 
-                    list.Add(NewItem);
+                    foreach (var item in query)
+                    {
+                        Usuarios NewItem = new Usuarios();
+
+                        NewItem.IdUsuario = item.idusuario;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Apellido1 = item.apellido1;
+                        NewItem.Apellido2 = item.apellido2;
+                        NewItem.Email = item.email;
+                        NewItem.EmailResp = item.emailResp;
+                        NewItem.Telefono = item.telefono;
+                        NewItem.TusuarioId = item.tUsuario;
+                        NewItem.Tipo = item.tipo;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
                 }
-
-                if (list == null)
+                else
                 {
-                    return NotFound();
-                }
+                    var query = (from u in _context.Usuarios
+                                 join t in _context.Tusuarios on
+                                 u.TusuarioId equals t.Id
+                                 where (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(buscar)
+                                 select new
+                                 {
+                                     idusuario = u.IdUsuario,
+                                     nombre = u.Nombre,
+                                     apellido1 = u.Apellido1,
+                                     apellido2 = u.Apellido2,
+                                     email = u.Email,
+                                     emailResp = u.EmailResp,
+                                     telefono = u.Telefono,
+                                     tUsuario = t.Id,
+                                     tipo = t.Tipo
+                                 }).ToList();
 
-                return list;
+                    List<Usuarios> list = new List<Usuarios>();
+
+                    foreach (var item in query)
+                    {
+                        Usuarios NewItem = new Usuarios();
+
+                        NewItem.IdUsuario = item.idusuario;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Apellido1 = item.apellido1;
+                        NewItem.Apellido2 = item.apellido2;
+                        NewItem.Email = item.email;
+                        NewItem.EmailResp = item.emailResp;
+                        NewItem.Telefono = item.telefono;
+                        NewItem.TusuarioId = item.tUsuario;
+                        NewItem.Tipo = item.tipo;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
             }
             else
             {
-                var query = (from u in _context.Usuarios
-                             join t in _context.Tusuarios on
-                             u.TusuarioId equals t.Id
-                             where (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(buscar)
-                             select new
-                             {
-                                 idusuario = u.IdUsuario,
-                                 nombre = u.Nombre,
-                                 apellido1 = u.Apellido1,
-                                 apellido2 = u.Apellido2,
-                                 email = u.Email,
-                                 emailResp = u.EmailResp,
-                                 telefono = u.Telefono,
-                                 tUsuario = t.Id,
-                                 tipo = t.Tipo
-                             }).ToList();
-
-                List<Usuarios> list = new List<Usuarios>();
-
-                foreach (var item in query)
+                if (string.IsNullOrEmpty(buscar))
                 {
-                    Usuarios NewItem = new Usuarios();
+                    var query = (from u in _context.Usuarios
+                                 join t in _context.Tusuarios on
+                                 u.TusuarioId equals t.Id
+                                 where u.Estado == estado & (u.TusuarioId == 1 || u.TusuarioId == 2)
+                                 select new
+                                 {
+                                     idusuario = u.IdUsuario,
+                                     nombre = u.Nombre,
+                                     apellido1 = u.Apellido1,
+                                     apellido2 = u.Apellido2,
+                                     email = u.Email,
+                                     emailResp = u.EmailResp,
+                                     telefono = u.Telefono,
+                                     tUsuario = t.Id,
+                                     tipo = t.Tipo
+                                 }).ToList();
 
-                    NewItem.IdUsuario = item.idusuario;
-                    NewItem.Nombre = item.nombre;
-                    NewItem.Apellido1 = item.apellido1;
-                    NewItem.Apellido2 = item.apellido2;
-                    NewItem.Email = item.email;
-                    NewItem.EmailResp = item.emailResp;
-                    NewItem.Telefono = item.telefono;
-                    NewItem.TusuarioId = item.tUsuario;
-                    NewItem.Tipo = item.tipo;
+                    List<Usuarios> list = new List<Usuarios>();
 
-                    list.Add(NewItem);
+                    foreach (var item in query)
+                    {
+                        Usuarios NewItem = new Usuarios();
+
+                        NewItem.IdUsuario = item.idusuario;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Apellido1 = item.apellido1;
+                        NewItem.Apellido2 = item.apellido2;
+                        NewItem.Email = item.email;
+                        NewItem.EmailResp = item.emailResp;
+                        NewItem.Telefono = item.telefono;
+                        NewItem.TusuarioId = item.tUsuario;
+                        NewItem.Tipo = item.tipo;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
                 }
-
-                if (list == null)
+                else
                 {
-                    return NotFound();
-                }
+                    var query = (from u in _context.Usuarios
+                                 join t in _context.Tusuarios on
+                                 u.TusuarioId equals t.Id
+                                 where (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(buscar) & (u.TusuarioId == 1 || u.TusuarioId == 2)
+                                 select new
+                                 {
+                                     idusuario = u.IdUsuario,
+                                     nombre = u.Nombre,
+                                     apellido1 = u.Apellido1,
+                                     apellido2 = u.Apellido2,
+                                     email = u.Email,
+                                     emailResp = u.EmailResp,
+                                     telefono = u.Telefono,
+                                     tUsuario = t.Id,
+                                     tipo = t.Tipo
+                                 }).ToList();
 
-                return list;
+                    List<Usuarios> list = new List<Usuarios>();
+
+                    foreach (var item in query)
+                    {
+                        Usuarios NewItem = new Usuarios();
+
+                        NewItem.IdUsuario = item.idusuario;
+                        NewItem.Nombre = item.nombre;
+                        NewItem.Apellido1 = item.apellido1;
+                        NewItem.Apellido2 = item.apellido2;
+                        NewItem.Email = item.email;
+                        NewItem.EmailResp = item.emailResp;
+                        NewItem.Telefono = item.telefono;
+                        NewItem.TusuarioId = item.tUsuario;
+                        NewItem.Tipo = item.tipo;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return list;
+                }
             }
         }
 

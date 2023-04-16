@@ -19,5 +19,7 @@
         public string NombreEmp { get; set; }
 
         public string NombrePro { get; set; }
+
+        public string DescripcionPro { get; set; }
     }
 }

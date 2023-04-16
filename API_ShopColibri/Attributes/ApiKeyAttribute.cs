@@ -17,7 +17,7 @@ namespace API_ShopColibri.Attributes
                 context.Result = new ContentResult()
                 {
                     StatusCode = 401,
-                    Content = "No se ha incluído una API Key"
+                    Content = "No se ha incluido una API Key"
                 };
 
                 return;

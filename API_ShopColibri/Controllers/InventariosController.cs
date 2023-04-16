@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
 using API_ShopColibri.Attributes;
 using API_ShopColibri.Models.DTO;
+using System.ComponentModel.DataAnnotations;
 
 namespace API_ShopColibri.Controllers
 {
@@ -77,7 +78,8 @@ namespace API_ShopColibri.Controllers
                                      productoCodigo = i.ProductoCodigo,
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
-                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                     nombreEmp = e.Nombre + " " + e.Tamannio,
+                                     DescripcionPro = p.Descripcion
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -95,6 +97,7 @@ namespace API_ShopColibri.Controllers
                         NewItem.EmpaqueId = item.empaqueId;
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
+                        NewItem.DescripcionPro = item.DescripcionPro;
 
                         list.Add(NewItem);
                     }
@@ -124,7 +127,8 @@ namespace API_ShopColibri.Controllers
                                      productoCodigo = i.ProductoCodigo,
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
-                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                     nombreEmp = e.Nombre + " " + e.Tamannio,
+                                     DescripcionPro = p.Descripcion
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -142,6 +146,7 @@ namespace API_ShopColibri.Controllers
                         NewItem.EmpaqueId = item.empaqueId;
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
+                        NewItem.DescripcionPro = item.DescripcionPro;
 
                         list.Add(NewItem);
                     }
@@ -174,7 +179,8 @@ namespace API_ShopColibri.Controllers
                                      productoCodigo = i.ProductoCodigo,
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
-                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                     nombreEmp = e.Nombre + " " + e.Tamannio,
+                                     DescripcionPro = p.Descripcion
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -192,6 +198,7 @@ namespace API_ShopColibri.Controllers
                         NewItem.EmpaqueId = item.empaqueId;
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
+                        NewItem.DescripcionPro = item.DescripcionPro;
 
                         list.Add(NewItem);
                     }
@@ -221,7 +228,8 @@ namespace API_ShopColibri.Controllers
                                      productoCodigo = i.ProductoCodigo,
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
-                                     nombreEmp = e.Nombre + " " + e.Tamannio
+                                     nombreEmp = e.Nombre + " " + e.Tamannio,
+                                     DescripcionPro = p.Descripcion
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -239,6 +247,7 @@ namespace API_ShopColibri.Controllers
                         NewItem.EmpaqueId = item.empaqueId;
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
+                        NewItem.DescripcionPro = item.DescripcionPro;
 
                         list.Add(NewItem);
                     }

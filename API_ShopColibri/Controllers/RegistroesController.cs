@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
+using API_ShopColibri.Models.DTO;
 
 namespace API_ShopColibri.Controllers
 {
@@ -47,6 +48,107 @@ namespace API_ShopColibri.Controllers
             }
 
             return registro;
+        }
+
+        // GET: api/Registroes/5
+        [HttpGet("BusquedaReg")]
+        public ActionResult<IEnumerable<Registro>> GetRegistroBusca(string? Filter)
+        {
+            if (!string.IsNullOrWhiteSpace(Filter))
+            {
+                var query = (from r in _context.Registros
+                             join u in _context.Usuarios
+                             on r.UsuarioIdUsuario equals u.IdUsuario
+                             where (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(Filter) || (r.Fecha.ToString()).Contains(Filter)
+                             select new
+                             {
+                                 id = r.Id,
+                                 fecha = r.Fecha,
+                                 hl = r.HorasL,
+                                 hx = r.HorasX,
+                                 hm = r.HorasM,
+                                 hj = r.HorasJ,
+                                 hv = r.HorasV,
+                                 hs = r.HorasS,
+                                 th = r.TotalHoras,
+                                 ch = r.CostoHora,
+                                 total = r.Total,
+                                 idusuario = r.UsuarioIdUsuario
+                             }).ToList();
+                List<Registro> list = new List<Registro>();
+
+                foreach (var item in query)
+                {
+                    Registro NewItem = new Registro();
+
+                    NewItem.Id = item.id;
+                    NewItem.Fecha = item.fecha;
+                    NewItem.HorasL = item.hl;
+                    NewItem.HorasX = item.hx;
+                    NewItem.HorasM = item.hm;
+                    NewItem.HorasJ = item.hj;
+                    NewItem.HorasV = item.hv;
+                    NewItem.HorasS = item.hs;
+                    NewItem.TotalHoras = item.th;
+                    NewItem.CostoHora = item.ch;
+                    NewItem.Total = item.total;
+                    NewItem.UsuarioIdUsuario = item.idusuario;
+
+                    list.Add(NewItem);
+                }
+                if (list == null)
+                {
+                    return NotFound();
+                }
+                return list;
+            }
+            else
+            {
+                var query = (from r in _context.Registros
+                             join u in _context.Usuarios
+                             on r.UsuarioIdUsuario equals u.IdUsuario
+                             select new
+                             {
+                                 id = r.Id,
+                                 fecha = r.Fecha,
+                                 hl = r.HorasL,
+                                 hx = r.HorasX,
+                                 hm = r.HorasM,
+                                 hj = r.HorasJ,
+                                 hv = r.HorasV,
+                                 hs = r.HorasS,
+                                 th = r.TotalHoras,
+                                 ch = r.CostoHora,
+                                 total = r.Total,
+                                 idusuario = r.UsuarioIdUsuario
+                             }).ToList();
+                List<Registro> list = new List<Registro>();
+
+                foreach (var item in query)
+                {
+                    Registro NewItem = new Registro();
+
+                    NewItem.Id = item.id;
+                    NewItem.Fecha = item.fecha;
+                    NewItem.HorasL = item.hl;
+                    NewItem.HorasX = item.hx;
+                    NewItem.HorasM = item.hm;
+                    NewItem.HorasJ = item.hj;
+                    NewItem.HorasV = item.hv;
+                    NewItem.HorasS = item.hs;
+                    NewItem.TotalHoras = item.th;
+                    NewItem.CostoHora = item.ch;
+                    NewItem.Total = item.total;
+                    NewItem.UsuarioIdUsuario = item.idusuario;
+
+                    list.Add(NewItem);
+                }
+                if (list == null)
+                {
+                    return NotFound();
+                }
+                return list;
+            }
         }
 
         // PUT: api/Registroes/5

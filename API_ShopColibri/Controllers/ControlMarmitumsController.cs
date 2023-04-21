@@ -23,47 +23,13 @@ namespace API_ShopColibri.Controllers
 
         // GET: api/ControlMarmitums
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ControlMarmitums>>> GetControlMarmita()
+        public async Task<ActionResult<IEnumerable<ControlMarmitum>>> GetControlMarmita()
         {
-            var query = (from c in _context.ControlMarmita
-                         select new
-                         {
-                             codigo = c.Codigo,
-                             fecha = c.Fecha,
-                             horaEn = c.HoraEn,
-                             horaAp = c.HoraAp,
-                             temperatura = c.Temperatura,
-                             intensidadMov = c.IntensidadMov,
-                             lote = c.Lote,
-                             usuario = c.UsuarioIdUsuarios
-                         }).ToList();
-
-            List<ControlMarmitums> list = new List<ControlMarmitums>();
-
-            foreach (var item in query)
-            {
-                ControlMarmitums NewItem = new ControlMarmitums();
-
-                NewItem.Codigo = item.codigo;
-                NewItem.Fecha = item.fecha;
-                NewItem.HoraEn = item.horaEn;
-                NewItem.HoraAp = item.horaAp;
-                NewItem.Temperatura = item.temperatura;
-                NewItem.IntensidadMov = item.intensidadMov;
-                NewItem.Lote = item.lote;
-                NewItem.idUsuario = item.usuario;
-
-                list.Add(NewItem);
-            }
-
-
-
-            if (list == null)
-            {
-                return NotFound();
-            }
-
-            return list;
+          if(_context.ControlMarmita == null)
+          {
+              return NotFound();
+          }
+          return await _context.ControlMarmita.ToListAsync();
         }
 
         // GET: api/ControlMarmitums/5

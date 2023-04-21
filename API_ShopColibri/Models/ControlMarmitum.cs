@@ -19,5 +19,5 @@ public partial class ControlMarmitum
 
     public string Lote { get; set; } = null!;
 
-    public virtual ICollection<Usuario> UsuarioIdUsuarios { get; } = new List<Usuario>();
+    public virtual ICollection<Usuario> UsuarioIdUsuarios { get; set; } = new List<Usuario>();
 }

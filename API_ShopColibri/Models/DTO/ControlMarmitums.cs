@@ -16,6 +16,6 @@
 
         public string Lote { get; set; } = null!;
 
-        public List<int> idUsuario { get; set; }
+        public List<Usuario> idUsuario { get; set; }
     }
 }

@@ -29,5 +29,5 @@ public partial class Registro
 
     public int UsuarioIdUsuario { get; set; }
 
-    public virtual Usuario UsuarioIdUsuarioNavigation { get; set; } = null!;
+    public virtual Usuario? UsuarioIdUsuarioNavigation { get; set; } = null!;
 }

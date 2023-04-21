@@ -41,6 +41,59 @@ namespace API_ShopColibri.Controllers
             return await _context.Usuarios.ToListAsync();
         }
 
+        // GET: api/Usuarios/UsuariosPrincipal
+        [HttpGet("UsuariosPrincipal")]
+        public ActionResult<IEnumerable<Usuarios>> GetUsuariosPrincipal()
+        {
+            if (_context.Usuarios == null)
+            {
+                return NotFound();
+            }
+            var query = (from u in _context.Usuarios
+                         join t in _context.Tusuarios
+                         on u.TusuarioId equals t.Id
+                         where u.Estado == true && (u.TusuarioId == 1 || u.TusuarioId == 2)
+                         select new
+                         {
+                             id = u.IdUsuario,
+                             nombre = u.Nombre,
+                             apellido1 = u.Apellido1,
+                             apellido2 = u.Apellido2,
+                             email = u.Email,
+                             emailResp = u.EmailResp,
+                             telefono = u.Telefono,
+                             tUsuario = u.TusuarioId,
+                             tipo = t.Tipo
+                         }).ToList();
+            List<Usuarios> list = new List<Usuarios>();
+
+            foreach (var item in query)
+            {
+                Usuarios NewItem = new Usuarios();
+
+                NewItem.IdUsuario = item.id;
+                NewItem.Nombre = item.nombre;
+                NewItem.Apellido1 = item.apellido1;
+                NewItem.Apellido2 = item.apellido2;
+                NewItem.Email = item.email;
+                NewItem.EmailResp = item.emailResp;
+                NewItem.Telefono = item.telefono;
+                NewItem.TusuarioId = item.tUsuario;
+                NewItem.Tipo = item.tipo;
+
+                list.Add(NewItem);
+            }
+
+
+
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            return list;
+        }
+
         //Get: api/Usuarios/GetUsuario?email=admin%40gmail.com
         [HttpGet("GetUsuario")]
         public ActionResult<IEnumerable<Usuarios>> GetUserInfo(string email)
@@ -48,7 +101,7 @@ namespace API_ShopColibri.Controllers
             var query = (from u in _context.Usuarios
                          join t in _context.Tusuarios on
                          u.TusuarioId equals t.Id
-                         where u.Email == email || (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(email) && u.Estado == true
+                         where (u.Email == email || u.EmailResp == email) || (u.Nombre + " " + u.Apellido1 + " " + u.Apellido2).Contains(email) && u.Estado == true
                          select new
                          {
                              idusuario = u.IdUsuario,
@@ -307,7 +360,7 @@ namespace API_ShopColibri.Controllers
         {
             string PassEncry = MyCrypto.EncriptarEnUnSentido(pass);
 
-            var usuario = await _context.Usuarios.SingleOrDefaultAsync(e => e.Email == Usuario || (e.Nombre + " " + e.Apellido1 + " " + e.Apellido2).Contains(Usuario) && e.Contrasennia == PassEncry && e.Estado == true);
+            var usuario = await _context.Usuarios.SingleOrDefaultAsync(e => (e.Email == Usuario || e.EmailResp == Usuario) || (e.Nombre + " " + e.Apellido1 + " " + e.Apellido2).Contains(Usuario) && e.Contrasennia == PassEncry && e.Estado == true);
 
             if (usuario == null)
             {

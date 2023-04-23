@@ -51,7 +51,7 @@ namespace API_ShopColibri.Controllers
 
         // GET: api/UsuarioControlMarmitums/BuscaControl?id=11
         [HttpGet("BuscaControl")]
-        public async Task<ActionResult<UsuarioControlMarmitum>> GetUsuarioControlMarmitumBusca(int id)
+        public ActionResult<IEnumerable<UsuarioControlMarmitum>> GetUsuarioControlMarmitumBusca(int id)
         {
             if (_context.UsuarioControlMarmita == null)
             {
@@ -66,14 +66,16 @@ namespace API_ShopColibri.Controllers
                                               controlCodigo = uc.ControlMarmitaCodigo,
                                               fecha = uc.Fecha
                                           }).ToList();
-            UsuarioControlMarmitum control = new UsuarioControlMarmitum();
+            List<UsuarioControlMarmitum> control = new List<UsuarioControlMarmitum>();
             foreach (var item in query)
             {
+                UsuarioControlMarmitum NewItem = new UsuarioControlMarmitum();
+                NewItem.DetalleId = item.detalleId;
+                NewItem.UsuarioIdUsuario = item.usuarioid;
+                NewItem.ControlMarmitaCodigo = item.controlCodigo;
+                NewItem.Fecha = item.fecha;
 
-                control.DetalleId = item.detalleId;
-                control.UsuarioIdUsuario = item.usuarioid;
-                control.ControlMarmitaCodigo = item.controlCodigo;
-                control.Fecha = item.fecha;
+                control.Add(NewItem);
             }
 
             if (control == null)

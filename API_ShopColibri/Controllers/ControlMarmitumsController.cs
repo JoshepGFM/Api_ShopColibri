@@ -50,6 +50,163 @@ namespace API_ShopColibri.Controllers
             return controlMarmitum;
         }
 
+        // GET: api/ControlMarmitums/ListaControl?buscar=10
+        [HttpGet("ListaControl")]
+        public ActionResult<IEnumerable<ControlMarmitums>> GetControlMarmitumLista(string? buscar)
+        {
+            if (buscar == null)
+            {
+                var query = (from c in _context.ControlMarmita
+                             select new
+                             {
+                                 codigo = c.Codigo,
+                                 fecha = c.Fecha,
+                                 horaEn = c.HoraEn,
+                                 horaAp = c.HoraAp,
+                                 temperatura = c.Temperatura,
+                                 intencidadMov = c.IntensidadMov,
+                                 lote = c.Lote,
+                                 usuarios = (from u in _context.Usuarios
+                                             join uc in _context.UsuarioControlMarmita
+                                             on u.IdUsuario equals uc.UsuarioIdUsuario
+                                             where uc.ControlMarmitaCodigo == c.Codigo
+                                             select new
+                                             {
+                                                 idUsuario = u.IdUsuario,
+                                                 nombre = u.Nombre,
+                                                 apellido1 = u.Apellido1,
+                                                 apellido2 = u.Apellido2,
+                                                 email = u.Email,
+                                                 emailRes = u.EmailResp,
+                                                 telefono = u.Telefono,
+                                                 Tusuario = u.TusuarioId
+                                             }).ToList()
+                             });
+                List<ControlMarmitums> list = new List<ControlMarmitums>();
+                foreach (var item in query)
+                {
+                    ControlMarmitums NewItem = new ControlMarmitums();
+
+                    NewItem.Codigo = item.codigo;
+                    NewItem.Fecha = item.fecha;
+                    NewItem.HoraEn = item.horaEn;
+                    NewItem.HoraAp = item.horaAp;
+                    NewItem.Temperatura = item.temperatura;
+                    NewItem.IntensidadMov = item.intencidadMov;
+                    NewItem.Lote = item.lote;
+                    List<Usuario> listUs = new List<Usuario>();
+                    foreach (var item2 in item.usuarios)
+                    {
+                        Usuario NewItemUs = new Usuario();
+
+                        NewItemUs.IdUsuario = item2.idUsuario;
+                        NewItemUs.Nombre = item2.nombre;
+                        NewItemUs.Apellido1 = item2.apellido1;
+                        NewItemUs.Apellido2 = item2.apellido2;
+                        NewItemUs.Email = item2.email;
+                        NewItemUs.EmailResp = item2.emailRes;
+                        NewItemUs.Telefono = item2.telefono;
+                        NewItemUs.TusuarioId = item2.Tusuario;
+
+                        listUs.Add(NewItemUs);
+                    }
+                    if (listUs != null)
+                    {
+                        NewItem.Usuarios = listUs;
+                    }
+                    else
+                    {
+                        NewItem.Usuarios = null;
+                    }
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return null;
+                }
+
+                return list;
+            }
+            else
+            {
+                var query = (from c in _context.ControlMarmita
+                             where c.Codigo.ToString().Contains(buscar) || c.Lote.Contains(buscar)
+                             select new
+                             {
+                                 codigo = c.Codigo,
+                                 fecha = c.Fecha,
+                                 horaEn = c.HoraEn,
+                                 horaAp = c.HoraAp,
+                                 temperatura = c.Temperatura,
+                                 intencidadMov = c.IntensidadMov,
+                                 lote = c.Lote,
+                                 usuarios = (from u in _context.Usuarios
+                                             join uc in _context.UsuarioControlMarmita
+                                             on u.IdUsuario equals uc.UsuarioIdUsuario
+                                             where uc.ControlMarmitaCodigo == c.Codigo
+                                             select new
+                                             {
+                                                 idUsuario = u.IdUsuario,
+                                                 nombre = u.Nombre,
+                                                 apellido1 = u.Apellido1,
+                                                 apellido2 = u.Apellido2,
+                                                 email = u.Email,
+                                                 emailRes = u.EmailResp,
+                                                 telefono = u.Telefono,
+                                                 Tusuario = u.TusuarioId
+                                             }).ToList()
+                             });
+                List<ControlMarmitums> list = new List<ControlMarmitums>();
+                foreach (var item in query)
+                {
+                    ControlMarmitums NewItem = new ControlMarmitums();
+
+                    NewItem.Codigo = item.codigo;
+                    NewItem.Fecha = item.fecha;
+                    NewItem.HoraEn = item.horaEn;
+                    NewItem.HoraAp = item.horaAp;
+                    NewItem.Temperatura = item.temperatura;
+                    NewItem.IntensidadMov = item.intencidadMov;
+                    NewItem.Lote = item.lote;
+                    List<Usuario> listUs = new List<Usuario>();
+                    foreach (var item2 in item.usuarios)
+                    {
+                        Usuario NewItemUs = new Usuario();
+
+                        NewItemUs.IdUsuario = item2.idUsuario;
+                        NewItemUs.Nombre = item2.nombre;
+                        NewItemUs.Apellido1 = item2.apellido1;
+                        NewItemUs.Apellido2 = item2.apellido2;
+                        NewItemUs.Email = item2.email;
+                        NewItemUs.EmailResp = item2.emailRes;
+                        NewItemUs.Telefono = item2.telefono;
+                        NewItemUs.TusuarioId = item2.Tusuario;
+
+                        listUs.Add(NewItemUs);
+                    }
+                    if (listUs != null)
+                    {
+                        NewItem.Usuarios = listUs;
+                    }
+                    else
+                    {
+                        NewItem.Usuarios = null;
+                    }
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return null;
+                }
+
+                return list;
+            }
+        }
+
         // PUT: api/ControlMarmitums/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

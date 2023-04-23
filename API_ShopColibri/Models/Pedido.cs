@@ -11,15 +11,11 @@ public partial class Pedido
 
     public DateTime FechaEn { get; set; }
 
-    public int Cantidad { get; set; }
-
-    public decimal Precio { get; set; }
-
     public decimal Total { get; set; }
 
     public int UsuarioIdUsuario { get; set; }
 
-    public virtual Usuario? UsuarioIdUsuarioNavigation { get; set; } = null!;
+    public virtual ICollection<PedidosInventario> PedidosInventarios { get; set; } = new List<PedidosInventario>();
 
-    public virtual ICollection<Inventario> Inventarios { get; } = new List<Inventario>();
+    public virtual Usuario? UsuarioIdUsuarioNavigation { get; set; } = null!;
 }

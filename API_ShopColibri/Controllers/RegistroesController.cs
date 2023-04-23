@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
 using API_ShopColibri.Models.DTO;
+using API_ShopColibri.Attributes;
 
 namespace API_ShopColibri.Controllers
 {
@@ -52,7 +53,7 @@ namespace API_ShopColibri.Controllers
 
         // GET: api/Registroes/5
         [HttpGet("BusquedaReg")]
-        public ActionResult<IEnumerable<Registro>> GetRegistroBusca(string? Filter)
+        public ActionResult<IEnumerable<Registros>> GetRegistroBusca(string? Filter)
         {
             if (!string.IsNullOrWhiteSpace(Filter))
             {
@@ -73,13 +74,14 @@ namespace API_ShopColibri.Controllers
                                  th = r.TotalHoras,
                                  ch = r.CostoHora,
                                  total = r.Total,
-                                 idusuario = r.UsuarioIdUsuario
+                                 idusuario = r.UsuarioIdUsuario,
+                                 nombre = u.Nombre + " " + u.Apellido1 + " " + u.Apellido2
                              }).ToList();
-                List<Registro> list = new List<Registro>();
+                List<Registros> list = new List<Registros>();
 
                 foreach (var item in query)
                 {
-                    Registro NewItem = new Registro();
+                    Registros NewItem = new Registros();
 
                     NewItem.Id = item.id;
                     NewItem.Fecha = item.fecha;
@@ -93,6 +95,7 @@ namespace API_ShopColibri.Controllers
                     NewItem.CostoHora = item.ch;
                     NewItem.Total = item.total;
                     NewItem.UsuarioIdUsuario = item.idusuario;
+                    NewItem.UsuarioName = item.nombre;
 
                     list.Add(NewItem);
                 }
@@ -120,13 +123,14 @@ namespace API_ShopColibri.Controllers
                                  th = r.TotalHoras,
                                  ch = r.CostoHora,
                                  total = r.Total,
-                                 idusuario = r.UsuarioIdUsuario
+                                 idusuario = r.UsuarioIdUsuario,
+                                 nombre = u.Nombre + " " + u.Apellido1 + " " + u.Apellido2
                              }).ToList();
-                List<Registro> list = new List<Registro>();
+                List<Registros> list = new List<Registros>();
 
                 foreach (var item in query)
                 {
-                    Registro NewItem = new Registro();
+                    Registros NewItem = new Registros();
 
                     NewItem.Id = item.id;
                     NewItem.Fecha = item.fecha;
@@ -140,6 +144,7 @@ namespace API_ShopColibri.Controllers
                     NewItem.CostoHora = item.ch;
                     NewItem.Total = item.total;
                     NewItem.UsuarioIdUsuario = item.idusuario;
+                    NewItem.UsuarioName = item.nombre;
 
                     list.Add(NewItem);
                 }

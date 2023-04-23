@@ -2,6 +2,7 @@
 {
     public class ControlMarmitums
     {
+
         public int Codigo { get; set; }
 
         public DateTime Fecha { get; set; }
@@ -16,6 +17,6 @@
 
         public string Lote { get; set; } = null!;
 
-        public List<Usuario> idUsuario { get; set; }
+        public List<Usuario> Usuarios { get; set; }
     }
 }

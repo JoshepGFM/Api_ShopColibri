@@ -31,6 +31,8 @@ public partial class ShopColibriContext : DbContext
 
     public virtual DbSet<Pedido> Pedidos { get; set; }
 
+    public virtual DbSet<PedidosInventario> PedidosInventarios { get; set; }
+
     public virtual DbSet<Producto> Productos { get; set; }
 
     public virtual DbSet<Registro> Registros { get; set; }
@@ -38,6 +40,10 @@ public partial class ShopColibriContext : DbContext
     public virtual DbSet<Tusuario> Tusuarios { get; set; }
 
     public virtual DbSet<Usuario> Usuarios { get; set; }
+
+    public virtual DbSet<UsuarioControlMarmitum> UsuarioControlMarmita { get; set; }
+
+    public virtual DbSet<UsuarioFechaIngre> UsuarioFechaIngres { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
@@ -157,7 +163,6 @@ public partial class ShopColibriContext : DbContext
 
             entity.Property(e => e.Fecha).HasColumnType("datetime");
             entity.Property(e => e.FechaEn).HasColumnType("datetime");
-            entity.Property(e => e.Precio).HasColumnType("decimal(19, 0)");
             entity.Property(e => e.Total).HasColumnType("decimal(19, 0)");
             entity.Property(e => e.UsuarioIdUsuario).HasColumnName("UsuarioId_Usuario");
 
@@ -165,23 +170,29 @@ public partial class ShopColibriContext : DbContext
                 .HasForeignKey(d => d.UsuarioIdUsuario)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKPedidos224413");
+        });
 
-            entity.HasMany(d => d.Inventarios).WithMany(p => p.PedidosCodigos)
-                .UsingEntity<Dictionary<string, object>>(
-                    "PedidosInventario",
-                    r => r.HasOne<Inventario>().WithMany()
-                        .HasForeignKey("InventarioId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKPedidos_In738396"),
-                    l => l.HasOne<Pedido>().WithMany()
-                        .HasForeignKey("PedidosCodigo")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKPedidos_In236078"),
-                    j =>
-                    {
-                        j.HasKey("PedidosCodigo", "InventarioId").HasName("PK__Pedidos___3EB9A2C1F0C8344A");
-                        j.ToTable("Pedidos_Inventario");
-                    });
+        modelBuilder.Entity<PedidosInventario>(entity =>
+        {
+            entity.HasKey(e => e.DetalleId).HasName("PK__Pedidos___3EB9A2C1F0C8344A");
+
+            entity.ToTable("Pedidos_Inventario");
+
+            entity.Property(e => e.Fecha)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("smalldatetime");
+            entity.Property(e => e.Precio).HasColumnType("numeric(18, 2)");
+            entity.Property(e => e.Total).HasColumnType("numeric(18, 2)");
+
+            entity.HasOne(d => d.Inventario).WithMany(p => p.PedidosInventarios)
+                .HasForeignKey(d => d.InventarioId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKPedidos_In738396");
+
+            entity.HasOne(d => d.PedidosCodigoNavigation).WithMany(p => p.PedidosInventarios)
+                .HasForeignKey(d => d.PedidosCodigo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKPedidos_In236078");
         });
 
         modelBuilder.Entity<Producto>(entity =>
@@ -262,42 +273,50 @@ public partial class ShopColibriContext : DbContext
                 .HasForeignKey(d => d.TusuarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKUsuario221017");
+        });
 
-            entity.HasMany(d => d.ControlMarmitaCodigos).WithMany(p => p.UsuarioIdUsuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuarioControlMarmitum",
-                    r => r.HasOne<ControlMarmitum>().WithMany()
-                        .HasForeignKey("ControlMarmitaCodigo")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKUsuario_Co363337"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioIdUsuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKUsuario_Co377774"),
-                    j =>
-                    {
-                        j.HasKey("UsuarioIdUsuario", "ControlMarmitaCodigo").HasName("PK__Usuario___F82F0B42E1D52407");
-                        j.ToTable("Usuario_ControlMarmita");
-                        j.IndexerProperty<int>("UsuarioIdUsuario").HasColumnName("UsuarioId_Usuario");
-                    });
+        modelBuilder.Entity<UsuarioControlMarmitum>(entity =>
+        {
+            entity.HasKey(e => e.DetalleId).HasName("PK__Usuario___F82F0B42E1D52407");
 
-            entity.HasMany(d => d.FechaIngres).WithMany(p => p.UsuarioIdUsuarios)
-                .UsingEntity<Dictionary<string, object>>(
-                    "UsuarioFechaIngre",
-                    r => r.HasOne<FechaIngre>().WithMany()
-                        .HasForeignKey("FechaIngreId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKUsuario_Fe391300"),
-                    l => l.HasOne<Usuario>().WithMany()
-                        .HasForeignKey("UsuarioIdUsuario")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FKUsuario_Fe999044"),
-                    j =>
-                    {
-                        j.HasKey("UsuarioIdUsuario", "FechaIngreId").HasName("PK__Usuario___147A47C56E758E06");
-                        j.ToTable("Usuario_FechaIngre");
-                        j.IndexerProperty<int>("UsuarioIdUsuario").HasColumnName("UsuarioId_Usuario");
-                    });
+            entity.ToTable("Usuario_ControlMarmita");
+
+            entity.Property(e => e.Fecha)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("smalldatetime");
+            entity.Property(e => e.UsuarioIdUsuario).HasColumnName("UsuarioId_Usuario");
+
+            entity.HasOne(d => d.ControlMarmitaCodigoNavigation).WithMany(p => p.UsuarioControlMarmita)
+                .HasForeignKey(d => d.ControlMarmitaCodigo)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKUsuario_Co363337");
+
+            entity.HasOne(d => d.UsuarioIdUsuarioNavigation).WithMany(p => p.UsuarioControlMarmita)
+                .HasForeignKey(d => d.UsuarioIdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKUsuario_Co377774");
+        });
+
+        modelBuilder.Entity<UsuarioFechaIngre>(entity =>
+        {
+            entity.HasKey(e => e.DetalleId).HasName("PK__Usuario___147A47C56E758E06");
+
+            entity.ToTable("Usuario_FechaIngre");
+
+            entity.Property(e => e.Fecha)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("smalldatetime");
+            entity.Property(e => e.UsuarioIdUsuario).HasColumnName("UsuarioId_Usuario");
+
+            entity.HasOne(d => d.FechaIngre).WithMany(p => p.UsuarioFechaIngres)
+                .HasForeignKey(d => d.FechaIngreId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKUsuario_Fe391300");
+
+            entity.HasOne(d => d.UsuarioIdUsuarioNavigation).WithMany(p => p.UsuarioFechaIngres)
+                .HasForeignKey(d => d.UsuarioIdUsuario)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FKUsuario_Fe999044");
         });
 
         OnModelCreatingPartial(modelBuilder);

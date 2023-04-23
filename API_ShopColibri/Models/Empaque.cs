@@ -13,7 +13,7 @@ public partial class Empaque
 
     public int Stock { get; set; }
 
-    public virtual ICollection<FechaIngre> FechaIngres { get; } = new List<FechaIngre>();
+    public virtual ICollection<FechaIngre> FechaIngres { get; set; } = new List<FechaIngre>();
 
-    public virtual ICollection<Inventario> Inventarios { get; } = new List<Inventario>();
+    public virtual ICollection<Inventario> Inventarios { get; set; } = new List<Inventario>();
 }

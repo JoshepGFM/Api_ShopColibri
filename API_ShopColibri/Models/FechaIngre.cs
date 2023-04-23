@@ -13,7 +13,7 @@ public partial class FechaIngre
 
     public int EmpaqueId { get; set; }
 
-    public virtual Empaque Empaque { get; set; } = null!;
+    public virtual Empaque? Empaque { get; set; } = null!;
 
-    public virtual ICollection<Usuario> UsuarioIdUsuarios { get; } = new List<Usuario>();
+    public virtual ICollection<UsuarioFechaIngre> UsuarioFechaIngres { get; set; } = new List<UsuarioFechaIngre>();
 }

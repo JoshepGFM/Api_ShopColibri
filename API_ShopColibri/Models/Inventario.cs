@@ -21,9 +21,9 @@ public partial class Inventario
 
     public virtual Empaque? Empaque { get; set; } = null!;
 
-    public virtual ICollection<Imagen> Imagens { get; } = new List<Imagen>();
+    public virtual ICollection<Imagen> Imagens { get; set; } = new List<Imagen>();
+
+    public virtual ICollection<PedidosInventario> PedidosInventarios { get; set; } = new List<PedidosInventario>();
 
     public virtual Producto? ProductoCodigoNavigation { get; set; } = null!;
-
-    public virtual ICollection<Pedido> PedidosCodigos { get; } = new List<Pedido>();
 }

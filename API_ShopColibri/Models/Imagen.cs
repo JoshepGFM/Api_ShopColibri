@@ -11,5 +11,5 @@ public partial class Imagen
 
     public int InventarioId { get; set; }
 
-    public virtual Inventario Inventario { get; set; } = null!;
+    public virtual Inventario? Inventario { get; set; } = null!;
 }

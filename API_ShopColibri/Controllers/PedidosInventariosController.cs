@@ -49,6 +49,51 @@ namespace API_ShopColibri.Controllers
             return pedidosInventario;
         }
 
+        // GET: api/PedidosInventarios/BuscarPedidos?id=10
+        [HttpGet("BuscarPedidos")]
+        public ActionResult<IEnumerable<PedidosInventario>> GetPedidosInventarioBuscar(int id)
+        {
+            if (_context.PedidosInventarios == null)
+            {
+                return NotFound();
+            }
+            var query = (from pi in _context.PedidosInventarios
+                         where pi.PedidosCodigo == id
+                         select new
+                         {
+                             detalleId = pi.DetalleId,
+                             inventarioId = pi.InventarioId,
+                             pedidoCodigo = pi.PedidosCodigo,
+                             cantidad = pi.Cantidad,
+                             precio = pi.Precio,
+                             total = pi.Total,
+                             fecha = pi.Fecha
+                         }).ToList();
+
+            List<PedidosInventario> list = new List<PedidosInventario>();
+            foreach (var item in query)
+            {
+                PedidosInventario NewItem = new PedidosInventario();
+
+                NewItem.DetalleId = item.detalleId;
+                NewItem.InventarioId = item.inventarioId;
+                NewItem.PedidosCodigo = item.pedidoCodigo;
+                NewItem.Cantidad = item.cantidad;
+                NewItem.Precio = item.precio;
+                NewItem.Total = item.total;
+                NewItem.Fecha = item.fecha;
+
+                list.Add(NewItem);
+            }
+
+            if (list == null)
+            {
+                return NotFound();
+            }
+
+            return list;
+        }
+
         // PUT: api/PedidosInventarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

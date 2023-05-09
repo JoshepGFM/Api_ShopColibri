@@ -119,7 +119,6 @@ namespace API_ShopColibri.Attributes
             }
 
             var file = request.ResponseBody;
-            
         }
     }
 }

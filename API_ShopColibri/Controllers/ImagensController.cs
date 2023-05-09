@@ -18,7 +18,6 @@ namespace API_ShopColibri.Controllers
     {
         private readonly ShopColibriContext _context;
         private Drive Dv;
-
         public ImagensController(ShopColibriContext context)
         {
             _context = context;
@@ -128,23 +127,47 @@ namespace API_ShopColibri.Controllers
         #region MetodosDrive
 
         [HttpPost("GuardarImagen")]
-        public async Task<string> GuardarImagen([FromForm] ImagenDrive Imagen)
+        public async Task<ActionResult> GuardarImagen(ImagenDrive Imagen)
         {
-            string ruta = String.Empty;
-            if (Imagen.Archivo.Length > 0)
+            try
             {
-                var nombreArchivo = Guid.NewGuid().ToString()+".jpg";
-                ruta = $"Imagenes/{nombreArchivo}";
-                using(var stream = new FileStream(ruta, FileMode.Create))
+                if (Imagen == null || Imagen.Archivo.Length == 0)
                 {
-                    await Imagen.Archivo.CopyToAsync(stream);
+                    return BadRequest("error imagen");
+                }
+
+                IFormFile Archivo = ImagenDrive.ConvertBase64(Imagen.Archivo);
+
+                string imagenName = Archivo.FileName;
+                string extension = Path.GetExtension(imagenName);
+
+                string[] allowedExtensions = { ".jpg", ".png", ".JPG", ".PNG", ".jpeg", ".JPEG" };
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    return BadRequest("error extension");
+                }
+
+                string newFileName = $"{Guid.NewGuid()}{extension}";
+                string filePath = $"Imagenes/{newFileName}";
+
+                using (var imagenL = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+                {
+                    await Archivo.CopyToAsync(imagenL);
                 }
                 string IdFol = Dv.ValidarFolder();
-                Dv.SubirArchivo(ruta, IdFol);
+                Dv.SubirArchivo(filePath, IdFol);
 
-                System.IO.File.Delete(ruta);
+                Dv.ObtenerArchivos();
+
+                System.IO.File.Delete(filePath);
+                return Ok($"Imagenes/{newFileName}");
             }
-            return ruta;
+            catch (Exception e)
+            {
+                return BadRequest();
+                throw;
+            }
         }
         #endregion
     }

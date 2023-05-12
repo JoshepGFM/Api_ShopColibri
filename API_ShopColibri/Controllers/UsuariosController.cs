@@ -17,7 +17,6 @@ namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [ApiKey]
     public class UsuariosController : ControllerBase
     {
         private readonly ShopColibriContext _context;
@@ -31,6 +30,7 @@ namespace API_ShopColibri.Controllers
         }
 
         // GET: api/Usuarios
+        [ApiKey]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Usuario>>> GetUsuarios()
         {
@@ -42,6 +42,7 @@ namespace API_ShopColibri.Controllers
         }
 
         // GET: api/Usuarios/UsuariosPrincipal
+        [ApiKey]
         [HttpGet("UsuariosPrincipal")]
         public ActionResult<IEnumerable<Usuarios>> GetUsuariosPrincipal()
         {
@@ -95,6 +96,7 @@ namespace API_ShopColibri.Controllers
         }
 
         //Get: api/Usuarios/GetUsuario?email=admin%40gmail.com
+        [ApiKey]
         [HttpGet("GetUsuario")]
         public ActionResult<IEnumerable<Usuarios>> GetUserInfo(string email)
         {
@@ -145,6 +147,7 @@ namespace API_ShopColibri.Controllers
         }
 
         //GET: api/Usuarios/GetUsuarioBuscar?buscar=dwf&estado=true&Cliente=true
+        [ApiKey]
         [HttpGet("GetUsuarioBuscar")]
         public ActionResult<IEnumerable<Usuarios>> GetUserBuscar(string? buscar, bool estado, bool Cliente)
         {
@@ -337,6 +340,7 @@ namespace API_ShopColibri.Controllers
         }
 
         // GET: api/Usuarios/5
+        [ApiKey]
         [HttpGet("{id}")]
         public async Task<ActionResult<Usuario>> GetUsuario(int id)
         {
@@ -355,6 +359,7 @@ namespace API_ShopColibri.Controllers
         }
 
         // GET: api/Usuarios/ValidarLogin?Usuario=admin%40gmail.com&pass=123
+        [ApiKey]
         [HttpGet("ValidarLogin")]
         public async Task<ActionResult<Usuario>> ValidarLogin(string Usuario, string pass)
         {
@@ -371,6 +376,7 @@ namespace API_ShopColibri.Controllers
         }
 
         // GET: api/Usuarios/ValidarConexion
+        [ApiKey]
         [HttpGet("ValidarConexion")]
         public async Task<ActionResult<Usuarios>> ValidarConexion()
         {
@@ -379,6 +385,7 @@ namespace API_ShopColibri.Controllers
 
         // PUT: api/Usuarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [ApiKey]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutUsuario(int id, Usuario usuario)
         {
@@ -410,6 +417,7 @@ namespace API_ShopColibri.Controllers
 
         // POST: api/Usuarios?s=1
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        [ApiKey]
         [HttpPost]
         public async Task<ActionResult<Usuario>> PostUsuario(Usuarios usuario, int s)
         {
@@ -442,6 +450,7 @@ namespace API_ShopColibri.Controllers
             return CreatedAtAction("GetUsuario", new { id = usuario.IdUsuario }, usuario);
         }
         //PATCH: api/Usuarios/ModificarUsuario?id=1
+        [ApiKey]
         [HttpPatch("ModificarUsuario")]
         public async Task<ActionResult> PatchUsuario(int id)
         {
@@ -480,32 +489,53 @@ namespace API_ShopColibri.Controllers
         }
 
         // DELETE: api/Usuarios/Validar?id=25
-        [HttpDelete("Validar")]
-        public async Task<IActionResult> ValidarUsuario(int id)
+        [HttpGet("Validar")]
+        public async Task<IActionResult> ValidarUsuario(int id, bool R)
         {
             var user = await _context.Usuarios.FindAsync(id);
             if (user == null)
             {
                 return NotFound();
             }
-            if (user.Estado == true)
+            if (!R)
             {
-                user.Estado = false;
+                if (user.Estado != true)
+                {
+                    user.Estado = true;
+                }
+                else
+                {
+                    return Ok("Ya esta acctiva la cuenta");
+                }
             }
             else
             {
-                user.Estado = true;
+                if (user.Estado == true)
+                {
+                    user.Estado = false;
+                }
+                else
+                {
+                    user.Estado = true;
+                }
             }
             _context.Usuarios.Add(user);
 
             _context.Entry(user).State = EntityState.Modified;
 
             await _context.SaveChangesAsync();
-
-            return NoContent();
+            if (!R)
+            {
+                return Ok("Se ha activado con exito la cuenta");
+            }
+            else
+            {
+                return Ok();
+            }
         }
 
         // DELETE: api/Usuarios/5
+        [ApiKey]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {

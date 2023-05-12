@@ -15,7 +15,7 @@ public partial class Usuario
 
     public string? Email { get; set; }
 
-    public string? Contrasennia { get; set; } = null!;
+    public string Contrasennia { get; set; } = null!;
 
     public string? EmailResp { get; set; }
 

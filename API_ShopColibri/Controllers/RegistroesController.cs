@@ -13,6 +13,7 @@ namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class RegistroesController : ControllerBase
     {
         private readonly ShopColibriContext _context;

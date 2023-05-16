@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
 using API_ShopColibri.Models.DTO;
+using API_ShopColibri.Attributes;
 
 namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class PedidoesController : ControllerBase
     {
         private readonly ShopColibriContext _context;

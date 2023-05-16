@@ -101,7 +101,7 @@ namespace API_ShopColibri.Attributes
             }
         }
 
-        public void SubirArchivo(string patch, string IdFolder)
+        public string SubirArchivo(string patch, string IdFolder)
         {
             DriveService service = GetService();
             IList<string> ListaFolder = new List<string>();
@@ -119,6 +119,10 @@ namespace API_ShopColibri.Attributes
             }
 
             var file = request.ResponseBody;
+
+            string enlaceDescarga = $"https://drive.google.com/uc?id={file.Id}";
+
+            return enlaceDescarga;
         }
     }
 }

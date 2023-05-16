@@ -9,11 +9,13 @@ using API_ShopColibri.Models;
 using API_ShopColibri.Attributes;
 using System.Drawing;
 using Google.Apis.Drive.v3;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace API_ShopColibri.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ApiKey]
     public class ImagensController : ControllerBase
     {
         private readonly ShopColibriContext _context;
@@ -127,13 +129,13 @@ namespace API_ShopColibri.Controllers
         #region MetodosDrive
 
         [HttpPost("GuardarImagen")]
-        public async Task<ActionResult> GuardarImagen(ImagenDrive Imagen)
+        public async Task<string> GuardarImagen(ImagenDrive Imagen)
         {
             try
             {
                 if (Imagen == null || Imagen.Archivo.Length == 0)
                 {
-                    return BadRequest("error imagen");
+                    return "error imagen";
                 }
 
                 IFormFile Archivo = ImagenDrive.ConvertBase64(Imagen.Archivo);
@@ -145,7 +147,7 @@ namespace API_ShopColibri.Controllers
 
                 if (!allowedExtensions.Contains(extension))
                 {
-                    return BadRequest("error extension");
+                    return "error extension";
                 }
 
                 string newFileName = $"{Guid.NewGuid()}{extension}";
@@ -156,16 +158,16 @@ namespace API_ShopColibri.Controllers
                     await Archivo.CopyToAsync(imagenL);
                 }
                 string IdFol = Dv.ValidarFolder();
-                Dv.SubirArchivo(filePath, IdFol);
+                string UrlImagen = Dv.SubirArchivo(filePath, IdFol);
 
                 Dv.ObtenerArchivos();
 
                 System.IO.File.Delete(filePath);
-                return Ok($"Imagenes/{newFileName}");
+                return UrlImagen;
             }
             catch (Exception e)
             {
-                return BadRequest();
+                Console.WriteLine(e.Message);
                 throw;
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace API_ShopColibri.Models.DTO
+﻿using System.Collections.ObjectModel;
+
+namespace API_ShopColibri.Models.DTO
 {
     public class Inventarios
     {
@@ -21,5 +23,7 @@
         public string NombrePro { get; set; }
 
         public string DescripcionPro { get; set; }
+
+        public ObservableCollection<Imagen> imagenes { get; set; }
     }
 }

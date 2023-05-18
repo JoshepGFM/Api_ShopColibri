@@ -9,6 +9,7 @@ using API_ShopColibri.Models;
 using API_ShopColibri.Attributes;
 using API_ShopColibri.Models.DTO;
 using System.ComponentModel.DataAnnotations;
+using System.Collections.ObjectModel;
 
 namespace API_ShopColibri.Controllers
 {
@@ -79,7 +80,15 @@ namespace API_ShopColibri.Controllers
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
                                      nombreEmp = e.Nombre + " " + e.Tamannio,
-                                     DescripcionPro = p.Descripcion
+                                     DescripcionPro = p.Descripcion,
+                                     imagenes = (from im in _context.Imagens
+                                                 where im.InventarioId == i.Id
+                                                 select new
+                                                 {
+                                                     id = im.Id,
+                                                     imagen = im.Imagen1,
+                                                     idInven = im.InventarioId
+                                                 }).ToList()
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -98,6 +107,26 @@ namespace API_ShopColibri.Controllers
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
                         NewItem.DescripcionPro = item.DescripcionPro;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item2 in item.imagenes)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item2.id;
+                            imagen.Imagen1 = item2.imagen;
+                            imagen.InventarioId = item2.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma != null)
+                        {
+                            NewItem.imagenes = listIma;
+                        }
+                        else
+                        {
+                            NewItem.imagenes = null;
+                        }
 
                         list.Add(NewItem);
                     }
@@ -128,7 +157,15 @@ namespace API_ShopColibri.Controllers
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
                                      nombreEmp = e.Nombre + " " + e.Tamannio,
-                                     DescripcionPro = p.Descripcion
+                                     DescripcionPro = p.Descripcion,
+                                     imagenes = (from im in _context.Imagens
+                                                 where im.InventarioId == i.Id
+                                                 select new
+                                                 {
+                                                     id = im.Id,
+                                                     imagen = im.Imagen1,
+                                                     idInven = im.InventarioId
+                                                 }).ToList()
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -147,6 +184,26 @@ namespace API_ShopColibri.Controllers
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
                         NewItem.DescripcionPro = item.DescripcionPro;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item2 in item.imagenes)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item2.id;
+                            imagen.Imagen1 = item2.imagen;
+                            imagen.InventarioId = item2.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma != null)
+                        {
+                            NewItem.imagenes = listIma;
+                        }
+                        else
+                        {
+                            NewItem.imagenes = null;
+                        }
 
                         list.Add(NewItem);
                     }
@@ -180,7 +237,15 @@ namespace API_ShopColibri.Controllers
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
                                      nombreEmp = e.Nombre + " " + e.Tamannio,
-                                     DescripcionPro = p.Descripcion
+                                     DescripcionPro = p.Descripcion,
+                                     imagenes = (from im in _context.Imagens
+                                                 where im.InventarioId == i.Id
+                                                 select new
+                                                 {
+                                                     id = im.Id,
+                                                     imagen = im.Imagen1,
+                                                     idInven = im.InventarioId
+                                                 }).ToList()
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -199,6 +264,26 @@ namespace API_ShopColibri.Controllers
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
                         NewItem.DescripcionPro = item.DescripcionPro;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item2 in item.imagenes)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item2.id;
+                            imagen.Imagen1 = item2.imagen;
+                            imagen.InventarioId = item2.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma != null)
+                        {
+                            NewItem.imagenes = listIma;
+                        }
+                        else
+                        {
+                            NewItem.imagenes = null;
+                        }
 
                         list.Add(NewItem);
                     }
@@ -229,7 +314,15 @@ namespace API_ShopColibri.Controllers
                                      empaqueId = i.EmpaqueId,
                                      nombrePro = p.Nombre,
                                      nombreEmp = e.Nombre + " " + e.Tamannio,
-                                     DescripcionPro = p.Descripcion
+                                     DescripcionPro = p.Descripcion,
+                                     imagenes = (from im in _context.Imagens
+                                                 where im.InventarioId == i.Id
+                                                 select new
+                                                 {
+                                                     id = im.Id,
+                                                     imagen = im.Imagen1,
+                                                     idInven = im.InventarioId
+                                                 }).ToList()
                                  }).ToList();
 
                     List<Inventarios> list = new List<Inventarios>();
@@ -248,6 +341,26 @@ namespace API_ShopColibri.Controllers
                         NewItem.NombrePro = item.nombrePro;
                         NewItem.NombreEmp = item.nombreEmp;
                         NewItem.DescripcionPro = item.DescripcionPro;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item2 in item.imagenes)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item2.id;
+                            imagen.Imagen1 = item2.imagen;
+                            imagen.InventarioId = item2.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma != null)
+                        {
+                            NewItem.imagenes = listIma;
+                        }
+                        else
+                        {
+                            NewItem.imagenes = null;
+                        }
 
                         list.Add(NewItem);
                     }

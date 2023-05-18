@@ -10,6 +10,7 @@ using API_ShopColibri.Attributes;
 using System.Drawing;
 using Google.Apis.Drive.v3;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Net;
 
 namespace API_ShopColibri.Controllers
 {
@@ -127,18 +128,18 @@ namespace API_ShopColibri.Controllers
         }
 
         #region MetodosDrive
-
+        // GuardarImagen?IdInve=0
         [HttpPost("GuardarImagen")]
-        public async Task<string> GuardarImagen(ImagenDrive Imagen)
+        public async Task<IActionResult> GuardarImagen(ImagenDrive archivo, int IdInve)
         {
             try
             {
-                if (Imagen == null || Imagen.Archivo.Length == 0)
+                if (archivo == null || archivo.Archivo.Length == 0)
                 {
-                    return "error imagen";
+                    return NotFound("error imagen");
                 }
 
-                IFormFile Archivo = ImagenDrive.ConvertBase64(Imagen.Archivo);
+                IFormFile Archivo = ImagenDrive.ConvertBase64(archivo.Archivo);
 
                 string imagenName = Archivo.FileName;
                 string extension = Path.GetExtension(imagenName);
@@ -147,7 +148,7 @@ namespace API_ShopColibri.Controllers
 
                 if (!allowedExtensions.Contains(extension))
                 {
-                    return "error extension";
+                    return NotFound("error extension");
                 }
 
                 string newFileName = $"{Guid.NewGuid()}{extension}";
@@ -160,10 +161,19 @@ namespace API_ShopColibri.Controllers
                 string IdFol = Dv.ValidarFolder();
                 string UrlImagen = Dv.SubirArchivo(filePath, IdFol);
 
-                Dv.ObtenerArchivos();
+                Imagen imagen = new Imagen();
+
+                imagen.Imagen1 = UrlImagen;
+                imagen.InventarioId = IdInve;
+
+                if (imagen != null)
+                {
+                    PostImagen(imagen);
+                }
 
                 System.IO.File.Delete(filePath);
-                return UrlImagen;
+
+                return Ok();
             }
             catch (Exception e)
             {

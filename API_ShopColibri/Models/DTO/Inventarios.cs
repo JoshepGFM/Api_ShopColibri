@@ -25,5 +25,7 @@ namespace API_ShopColibri.Models.DTO
         public string DescripcionPro { get; set; }
 
         public ObservableCollection<Imagen> imagenes { get; set; }
+
+        public string priImagen { get; set; }
     }
 }

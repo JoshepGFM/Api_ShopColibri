@@ -127,6 +127,10 @@ namespace API_ShopColibri.Controllers
                         {
                             NewItem.imagenes = null;
                         }
+                        if (listIma.Count > 0)
+                        {
+                            NewItem.priImagen = listIma[0].Imagen1;
+                        }
 
                         list.Add(NewItem);
                     }
@@ -203,6 +207,10 @@ namespace API_ShopColibri.Controllers
                         else
                         {
                             NewItem.imagenes = null;
+                        }
+                        if (listIma.Count > 0)
+                        {
+                            NewItem.priImagen = listIma[0].Imagen1;
                         }
 
                         list.Add(NewItem);
@@ -284,7 +292,10 @@ namespace API_ShopColibri.Controllers
                         {
                             NewItem.imagenes = null;
                         }
-
+                        if (listIma.Count > 0)
+                        {
+                            NewItem.priImagen = listIma[0].Imagen1;
+                        }
                         list.Add(NewItem);
                     }
 
@@ -361,7 +372,10 @@ namespace API_ShopColibri.Controllers
                         {
                             NewItem.imagenes = null;
                         }
-
+                        if (listIma.Count > 0)
+                        {
+                            NewItem.priImagen = listIma[0].Imagen1;
+                        }
                         list.Add(NewItem);
                     }
 

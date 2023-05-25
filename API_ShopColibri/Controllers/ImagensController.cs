@@ -103,23 +103,34 @@ namespace API_ShopColibri.Controllers
         }
 
         // DELETE: api/Imagens/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImagen(int id)
+        [HttpDelete("EliminarMasivo")]
+        public async Task<IActionResult> DeleteImagen(List<int> imagenes)
         {
-            if (_context.Imagens == null)
+            try
             {
-                return NotFound();
-            }
-            var imagen = await _context.Imagens.FindAsync(id);
-            if (imagen == null)
+                if (_context.Imagens == null)
+                {
+                    return NotFound();
+                }
+                foreach (var proces in imagenes)
+                {
+                    var imagen = await _context.Imagens.FindAsync(proces);
+                    if (imagen == null)
+                    {
+                        return NotFound();
+                    }
+
+                    _context.Imagens.Remove(imagen);
+
+                    Dv.EliminarImagen(imagen.Imagen1);
+                    await _context.SaveChangesAsync();
+                }
+                return NoContent();
+            }catch (Exception ex)
             {
-                return NotFound();
+                Console.WriteLine(ex.Message);
+                throw;
             }
-
-            _context.Imagens.Remove(imagen);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool ImagenExists(int id)
@@ -128,7 +139,7 @@ namespace API_ShopColibri.Controllers
         }
 
         #region MetodosDrive
-        // GuardarImagen?IdInve=0
+        // GuardarImagen/GuardarImagen
         [HttpPost("GuardarImagen")]
         public async Task<IActionResult> GuardarImagen(ImagenDrive archivo, int IdInve)
         {
@@ -159,17 +170,14 @@ namespace API_ShopColibri.Controllers
                     await Archivo.CopyToAsync(imagenL);
                 }
                 string IdFol = Dv.ValidarFolder();
-                string UrlImagen = Dv.SubirArchivo(filePath, IdFol);
+                string IdImagen = Dv.SubirArchivo(filePath, IdFol);
 
                 Imagen imagen = new Imagen();
 
-                imagen.Imagen1 = UrlImagen;
+                imagen.Imagen1 = IdImagen;
                 imagen.InventarioId = IdInve;
 
-                if (imagen != null)
-                {
-                    PostImagen(imagen);
-                }
+                await PostImagen(imagen);
 
                 System.IO.File.Delete(filePath);
 

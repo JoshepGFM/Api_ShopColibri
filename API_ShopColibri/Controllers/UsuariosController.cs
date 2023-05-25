@@ -22,11 +22,13 @@ namespace API_ShopColibri.Controllers
         private readonly ShopColibriContext _context;
         private readonly AutoMapper.Mapper _mapper;
         public Tools.Crypto MyCrypto { get; set; }
+        private Drive Dv { get; set; }
 
         public UsuariosController(ShopColibriContext context)
         {
             _context = context;
             MyCrypto = new Tools.Crypto();
+            Dv = new Drive();
         }
 
         // GET: api/Usuarios
@@ -371,6 +373,8 @@ namespace API_ShopColibri.Controllers
             {
                 return NotFound();
             }
+
+            Dv.RefreshToken();
 
             return usuario;
         }

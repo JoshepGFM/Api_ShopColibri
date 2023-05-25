@@ -3,6 +3,7 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
+using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -18,10 +19,10 @@ namespace API_ShopColibri.Attributes
     {
         private static string[] Scopes = { DriveService.Scope.Drive };
         private static string AplicationName = "ShopColibriApp";
+        private UserCredential credential;
 
         private DriveService GetService()
         {
-            UserCredential credential;
 
             using (var stream = new FileStream("Properties/CredenDri.json", FileMode.Open, FileAccess.Read))
             {
@@ -32,7 +33,6 @@ namespace API_ShopColibri.Attributes
                     "user",
                     CancellationToken.None,
                     new FileDataStore(creadPath, true)).Result;
-                Console.WriteLine("Credential file saved to: " + creadPath);
             }
 
             var service = new DriveService(new BaseClientService.Initializer()
@@ -42,6 +42,27 @@ namespace API_ShopColibri.Attributes
             });
 
             return service;
+        }
+
+        public void RefreshToken()
+        {
+            GetService();
+
+            if (credential.Token.IsExpired(credential.Flow.Clock))
+            {
+                if (credential.RefreshTokenAsync(CancellationToken.None).Result)
+                {
+                    Console.WriteLine("Token de acceso actualizado.");
+                }
+                else
+                {
+                    Console.WriteLine("Error al actualizar el token de acceso.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("El token de acceso aún es válido.");
+            }
         }
 
         public string ValidarFolder()
@@ -120,9 +141,17 @@ namespace API_ShopColibri.Attributes
 
             var file = request.ResponseBody;
 
-            string enlaceDescarga = $"https://drive.google.com/uc?id={file.Id}";
+            string enlaceDescarga = file.Id;
 
             return enlaceDescarga;
+        }
+
+        public void EliminarImagen(string fileId)
+        {
+            DriveService service = GetService();
+
+            // Eliminar el archivo de Google Drive
+            service.Files.Delete(fileId).Execute();
         }
     }
 }

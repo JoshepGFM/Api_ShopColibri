@@ -105,14 +105,38 @@ namespace API_ShopColibri.Controllers
             {
                 return NotFound();
             }
-            var fechaIngre = await _context.FechaIngres.FindAsync(id);
-            if (fechaIngre == null)
+            var query = (from f in _context.FechaIngres
+                              where f.EmpaqueId == id
+                              select new
+                              {
+                                  id = f.Id,
+                                  fecha = f.Fecha,
+                                  entrada = f.Entrada,
+                                  empaqueId = f.EmpaqueId
+                              }).ToList();
+            List<FechaIngre> list = new List<FechaIngre>();
+            foreach (var item in query)
             {
-                return NotFound();
-            }
+                FechaIngre NewItem = new FechaIngre();
 
-            _context.FechaIngres.Remove(fechaIngre);
-            await _context.SaveChangesAsync();
+                NewItem.Id = item.id;
+                NewItem.Fecha = item.fecha;
+                NewItem.Entrada = item.entrada;
+                NewItem.EmpaqueId = item.empaqueId;
+
+                list.Add(NewItem);
+            }
+            for(int i = 0; i < list.Count; ++i)
+            {
+                var fechaIngre = await _context.FechaIngres.FindAsync(list[i].Id);
+                if (fechaIngre == null)
+                {
+                    return NotFound();
+                }
+
+                _context.FechaIngres.Remove(fechaIngre);
+                await _context.SaveChangesAsync();
+            }
 
             return NoContent();
         }

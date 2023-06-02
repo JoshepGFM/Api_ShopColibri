@@ -22,64 +22,106 @@ namespace API_ShopColibri.Controllers
             _context = context;
         }
 
-        // GET: api/Bitacoras
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Bitacora>>> GetBitacoras()
+        // GET: api/Bitacoras/Consulta?inicio=5%2F1%2F2023&final=6%2F1%2F2023&busqueda=verfrew&Todo=true
+        [HttpGet("Consulta")]
+        public async Task<IEnumerable<Bitacora>> GetBitacora(DateTime inicio, DateTime final, string? busqueda, bool Todo)
         {
           if (_context.Bitacoras == null)
           {
-              return NotFound();
+              return (IEnumerable<Bitacora>)NotFound();
           }
-            return await _context.Bitacoras.ToListAsync();
-        }
-
-        // GET: api/Bitacoras/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Bitacora>> GetBitacora(int id)
-        {
-          if (_context.Bitacoras == null)
-          {
-              return NotFound();
-          }
-            var bitacora = await _context.Bitacoras.FindAsync(id);
-
-            if (bitacora == null)
+            if (inicio <= final && !Todo) 
             {
-                return NotFound();
-            }
-
-            return bitacora;
-        }
-
-        // PUT: api/Bitacoras/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutBitacora(int id, Bitacora bitacora)
-        {
-            if (id != bitacora.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(bitacora).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!BitacoraExists(id))
+                if (busqueda == null)
                 {
-                    return NotFound();
+                    var query = (from b in _context.Bitacoras
+                                 where b.Fecha >= inicio && b.Fecha <= final
+                                 select new
+                                 {
+                                     id = b.Id,
+                                     fecha = b.Fecha,
+                                     descripcion = b.Descripcion
+                                 }).ToList();
+
+                    List<Bitacora> list = new List<Bitacora>();
+                    foreach (var item in query)
+                    {
+                        Bitacora NewItem = new Bitacora();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Descripcion = item.descripcion;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return (IEnumerable<Bitacora>)NotFound();
+                    }
+
+                    return list;
                 }
                 else
                 {
-                    throw;
+                    var query = (from b in _context.Bitacoras
+                                 where (b.Fecha >= inicio && b.Fecha <= final) && b.Descripcion.Contains(busqueda)
+                                 select new
+                                 {
+                                     id = b.Id,
+                                     fecha = b.Fecha,
+                                     descripcion = b.Descripcion
+                                 }).ToList();
+
+                    List<Bitacora> list = new List<Bitacora>();
+                    foreach (var item in query)
+                    {
+                        Bitacora NewItem = new Bitacora();
+
+                        NewItem.Id = item.id;
+                        NewItem.Fecha = item.fecha;
+                        NewItem.Descripcion = item.descripcion;
+
+                        list.Add(NewItem);
+                    }
+
+                    if (list == null)
+                    {
+                        return (IEnumerable<Bitacora>)NotFound();
+                    }
+
+                    return list;
                 }
             }
+            else
+            {
+                var query = (from b in _context.Bitacoras
+                             select new
+                             {
+                                 id = b.Id,
+                                 fecha = b.Fecha,
+                                 descripcion = b.Descripcion
+                             }).ToList();
 
-            return NoContent();
+                List<Bitacora> list = new List<Bitacora>();
+                foreach (var item in query)
+                {
+                    Bitacora NewItem = new Bitacora();
+
+                    NewItem.Id = item.id;
+                    NewItem.Fecha = item.fecha;
+                    NewItem.Descripcion = item.descripcion;
+
+                    list.Add(NewItem);
+                }
+
+                if (list == null)
+                {
+                    return (IEnumerable<Bitacora>)NotFound();
+                }
+
+                return list;
+            }
         }
 
         // POST: api/Bitacoras
@@ -95,26 +137,6 @@ namespace API_ShopColibri.Controllers
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetBitacora", new { id = bitacora.Id }, bitacora);
-        }
-
-        // DELETE: api/Bitacoras/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteBitacora(int id)
-        {
-            if (_context.Bitacoras == null)
-            {
-                return NotFound();
-            }
-            var bitacora = await _context.Bitacoras.FindAsync(id);
-            if (bitacora == null)
-            {
-                return NotFound();
-            }
-
-            _context.Bitacoras.Remove(bitacora);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
         private bool BitacoraExists(int id)

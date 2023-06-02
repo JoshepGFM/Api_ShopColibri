@@ -25,5 +25,7 @@
         public decimal Precio { get; set; }
 
         public decimal Total { get; set; }
+
+        public string priImagen { get; set; }
     }
 }

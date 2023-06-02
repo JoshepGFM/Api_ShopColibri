@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
 using API_ShopColibri.Models.DTO;
 using API_ShopColibri.Attributes;
+using System.Collections.ObjectModel;
 
 namespace API_ShopColibri.Controllers
 {
@@ -102,7 +103,15 @@ namespace API_ShopColibri.Controllers
                                                     nombrePro = pr.Nombre,
                                                     cantidad = pi.Cantidad,
                                                     precio = pi.Precio,
-                                                    total = pi.Total
+                                                    total = pi.Total,
+                                                    priImagen = (from im in _context.Imagens
+                                                                 where im.InventarioId == i.Id
+                                                                 select new
+                                                                 {
+                                                                     id = im.Id,
+                                                                     imagen = im.Imagen1,
+                                                                     idInven = im.InventarioId
+                                                                 }).ToList()
                                                 }).ToList()
                              }).ToList();
 
@@ -147,6 +156,22 @@ namespace API_ShopColibri.Controllers
                         NewIven.Cantidad = item2.cantidad;
                         NewIven.Precio = item2.precio;
                         NewIven.Total = item2.total;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item3 in item2.priImagen)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item3.id;
+                            imagen.Imagen1 = item3.imagen;
+                            imagen.InventarioId = item3.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma.Count > 0)
+                        {
+                            NewIven.priImagen = listIma[0].Imagen1;
+                        }
 
                         inventario.Add(NewIven);
                     }
@@ -209,7 +234,15 @@ namespace API_ShopColibri.Controllers
                                                     nombrePro = pr.Nombre,
                                                     cantidad = pi.Cantidad,
                                                     precio = pi.Precio,
-                                                    total = pi.Total
+                                                    total = pi.Total,
+                                                    priImagen = (from im in _context.Imagens
+                                                                 where im.InventarioId == i.Id
+                                                                 select new
+                                                                 {
+                                                                     id = im.Id,
+                                                                     imagen = im.Imagen1,
+                                                                     idInven = im.InventarioId
+                                                                 }).ToList()
                                                 }).ToList()
                              }).ToList();
 
@@ -254,6 +287,22 @@ namespace API_ShopColibri.Controllers
                         NewIven.Cantidad = item2.cantidad;
                         NewIven.Precio = item2.precio;
                         NewIven.Total = item2.total;
+
+                        ObservableCollection<Imagen> listIma = new ObservableCollection<Imagen>();
+                        foreach (var item3 in item2.priImagen)
+                        {
+                            Imagen imagen = new Imagen();
+
+                            imagen.Id = item3.id;
+                            imagen.Imagen1 = item3.imagen;
+                            imagen.InventarioId = item3.idInven;
+
+                            listIma.Add(imagen);
+                        }
+                        if (listIma.Count > 0)
+                        {
+                            NewIven.priImagen = listIma[0].Imagen1;
+                        }
 
                         inventario.Add(NewIven);
                     }

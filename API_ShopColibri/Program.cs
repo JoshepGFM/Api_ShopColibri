@@ -18,7 +18,7 @@ internal class Program
     private static void Main(string[] args)
     {
         // Crear el temporizador con el intervalo calculado para refrescar el token
-        _timer = new System.Timers.Timer(5.5 * 60 * 60 * 1000);
+        _timer = new System.Timers.Timer(60 * 60 * 1000);
         _timer.Elapsed += TimerElapsed;
         _timer.Start();
 

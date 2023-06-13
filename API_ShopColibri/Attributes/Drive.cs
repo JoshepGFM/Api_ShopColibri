@@ -68,7 +68,7 @@ namespace API_ShopColibri.Attributes
 
         public void RefreshToken()
         {
-            //GetService();
+            GetService();
         }
 
         public string ValidarFolder()

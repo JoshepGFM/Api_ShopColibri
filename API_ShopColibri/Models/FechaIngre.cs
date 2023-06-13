@@ -11,9 +11,13 @@ public partial class FechaIngre
 
     public int Entrada { get; set; }
 
-    public int EmpaqueId { get; set; }
+    public int? EmpaqueId { get; set; }
 
-    public virtual Empaque? Empaque { get; set; } = null!;
+    public int? InventarioId { get; set; }
+
+    public virtual Empaque? Empaque { get; set; }
+
+    public virtual Inventario? Inventario { get; set; }
 
     public virtual ICollection<UsuarioFechaIngre> UsuarioFechaIngres { get; set; } = new List<UsuarioFechaIngre>();
 }

@@ -21,6 +21,8 @@ public partial class Inventario
 
     public virtual Empaque? Empaque { get; set; } = null!;
 
+    public virtual ICollection<FechaIngre> FechaIngres { get; set; } = new List<FechaIngre>();
+
     public virtual ICollection<Imagen> Imagens { get; set; } = new List<Imagen>();
 
     public virtual ICollection<PedidosInventario> PedidosInventarios { get; set; } = new List<PedidosInventario>();

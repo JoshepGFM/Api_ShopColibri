@@ -373,8 +373,10 @@ namespace API_ShopColibri.Controllers
             {
                 return NotFound();
             }
-
-            Dv.RefreshToken();
+            if (usuario.TusuarioId == 1)
+            {
+               Dv.RefreshToken();
+            }
 
             return usuario;
         }
@@ -492,7 +494,7 @@ namespace API_ShopColibri.Controllers
             return NoContent();
         }
 
-        // DELETE: api/Usuarios/Validar?id=25
+        // DELETE: api/Usuarios/Validar?id=25&R=false
         [HttpGet("Validar")]
         public async Task<IActionResult> ValidarUsuario(int id, bool R)
         {
@@ -514,13 +516,20 @@ namespace API_ShopColibri.Controllers
             }
             else
             {
-                if (user.Estado == true)
+                if (id != 1)
                 {
-                    user.Estado = false;
+                    if (user.Estado == true)
+                    {
+                        user.Estado = false;
+                    }
+                    else
+                    {
+                        user.Estado = true;
+                    }
                 }
                 else
                 {
-                    user.Estado = true;
+                    return Ok("Esta cuenta no se puede invalidar");
                 }
             }
             _context.Usuarios.Add(user);
@@ -530,7 +539,7 @@ namespace API_ShopColibri.Controllers
             await _context.SaveChangesAsync();
             if (!R)
             {
-                return Ok("Se ha activado con exito la cuenta");
+                return Ok("Se ha activado con éxito la cuenta");
             }
             else
             {

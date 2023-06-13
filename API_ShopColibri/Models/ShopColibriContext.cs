@@ -109,11 +109,15 @@ public partial class ShopColibriContext : DbContext
 
             entity.Property(e => e.EmpaqueId).HasColumnName("EmpaqueID");
             entity.Property(e => e.Fecha).HasColumnType("datetime");
+            entity.Property(e => e.InventarioId).HasColumnName("InventarioID");
 
             entity.HasOne(d => d.Empaque).WithMany(p => p.FechaIngres)
                 .HasForeignKey(d => d.EmpaqueId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FKFechaIngre973916");
+
+            entity.HasOne(d => d.Inventario).WithMany(p => p.FechaIngres)
+                .HasForeignKey(d => d.InventarioId)
+                .HasConstraintName("FK__FechaIngr__Inven__51300E55");
         });
 
         modelBuilder.Entity<Imagen>(entity =>
@@ -123,7 +127,7 @@ public partial class ShopColibriContext : DbContext
             entity.ToTable("Imagen");
 
             entity.Property(e => e.Imagen1)
-                .HasMaxLength(255)
+                .HasMaxLength(1000)
                 .IsUnicode(false)
                 .HasColumnName("Imagen");
 

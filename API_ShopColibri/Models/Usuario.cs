@@ -21,7 +21,7 @@ public partial class Usuario
 
     public string Telefono { get; set; } = null!;
 
-    public bool Estado { get; set; }
+    public bool Estado { get; set; } = false;
 
     public int TusuarioId { get; set; }
 

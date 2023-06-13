@@ -34,9 +34,9 @@ namespace API_ShopColibri.Controllers
             {
                 if (busqueda == null)
                 {
-                    var query = (from b in _context.Bitacoras
-                                 where b.Fecha >= inicio && b.Fecha <= final
-                                 select new
+                    var query = _context.Bitacoras.Where(
+                        b=> b.Fecha.Date.CompareTo(inicio) >= 0 && b.Fecha.Date.CompareTo(final) <= 0 )
+                        .Select(b => new
                                  {
                                      id = b.Id,
                                      fecha = b.Fecha,
@@ -64,9 +64,9 @@ namespace API_ShopColibri.Controllers
                 }
                 else
                 {
-                    var query = (from b in _context.Bitacoras
-                                 where (b.Fecha >= inicio && b.Fecha <= final) && b.Descripcion.Contains(busqueda)
-                                 select new
+                    var query = _context.Bitacoras
+                        .Where(b => b.Fecha.Date.CompareTo(inicio) >= 0 && b.Fecha.Date.CompareTo(final) <= 0
+                        && b.Descripcion.Contains(busqueda)).Select(b => new
                                  {
                                      id = b.Id,
                                      fecha = b.Fecha,
@@ -95,8 +95,8 @@ namespace API_ShopColibri.Controllers
             }
             else
             {
-                var query = (from b in _context.Bitacoras
-                             select new
+                var query = _context.Bitacoras
+                    .Select(b => new
                              {
                                  id = b.Id,
                                  fecha = b.Fecha,

@@ -2,6 +2,7 @@
 using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 using Google.Apis.Services;
+using Google.Apis.Util;
 using Google.Apis.Util.Store;
 using Microsoft.CodeAnalysis.Elfie.Serialization;
 using System;
@@ -17,8 +18,8 @@ namespace API_ShopColibri.Attributes
 {
     public class Drive
     {
-        private static string[] Scopes = { DriveService.Scope.Drive };
-        private static string AplicationName = "ShopColibriApp";
+        private string[] Scopes = { DriveService.Scope.Drive };
+        private string ApplicationName = "ShopColibriApp";
         private UserCredential credential;
 
         private DriveService GetService()
@@ -35,19 +36,6 @@ namespace API_ShopColibri.Attributes
                     new FileDataStore(creadPath, true)).Result;
             }
 
-            var service = new DriveService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = AplicationName,
-            });
-
-            return service;
-        }
-
-        public void RefreshToken()
-        {
-            GetService();
-
             if (credential.Token.IsExpired(credential.Flow.Clock))
             {
                 if (credential.RefreshTokenAsync(CancellationToken.None).Result)
@@ -63,6 +51,24 @@ namespace API_ShopColibri.Attributes
             {
                 Console.WriteLine("El token de acceso aún es válido.");
             }
+
+            //var service = new DriveService(new BaseClientService.Initializer()
+            //{
+            //    HttpClientInitializer = credential,
+            //    ApplicationName = ApplicationName,
+            //});
+            //Crear el servicio de Google Drive usando el token actualizado
+            var service = new DriveService(new Google.Apis.Services.BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = ApplicationName,
+            });
+            return service;
+        }
+
+        public void RefreshToken()
+        {
+            //GetService();
         }
 
         public string ValidarFolder()

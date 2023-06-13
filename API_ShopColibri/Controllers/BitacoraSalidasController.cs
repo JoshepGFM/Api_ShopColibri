@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using API_ShopColibri.Models;
 using API_ShopColibri.Attributes;
 using API_ShopColibri.Models.DTO;
+using System.Globalization;
 
 namespace API_ShopColibri.Controllers
 {
@@ -23,26 +24,24 @@ namespace API_ShopColibri.Controllers
             _context = context;
         }
 
-        // GET: api/BitacoraSalidas/Consulta?inicio=4&final=4&producto=trt&Todo=true
+        // GET: api/BitacoraSalidas/Consulta?inicio=6%2F5%2F2023&final=6%2F6%2F2023&producto=%20&Todo=true
         [HttpGet("Consulta")]
         public async Task<IEnumerable<BitacoraSalida>> GetBitacoraSalida(DateTime inicio, DateTime final, string? producto, bool Todo)
         {
-            string fInicio = inicio.ToString().Split(' ')[0];
-            string fFinal = final.ToString().Split(' ')[0];
-            if (inicio.ToString() != "1/1/1900 00:00:00" && final.ToString() != "1/1/1900 00:00:00"
-                && inicio <= final && !Todo)
+            if ( inicio <= final && !Todo)
             {
                 if (producto == null)
                 {
-                    var query = (from b in _context.BitacoraSalidas
-                                 where b.Fecha >= inicio && b.Fecha <= final
-                                 select new
-                                 {
-                                     fecha = b.Fecha,
-                                     objetoRef = b.ObjetoRef,
-                                     salida = b.Salida,
-                                     id = b.Id
-                                 }).ToList();
+                    var query = _context.BitacoraSalidas
+                    .Where(b => b.Fecha.Date.CompareTo(inicio) >= 0 && b.Fecha.Date.CompareTo(final) <= 0)
+                    .Select(b => new
+                    {
+                        fecha = b.Fecha,
+                        objetoRef = b.ObjetoRef,
+                        salida = b.Salida,
+                        id = b.Id
+                    })
+                    .ToList();
 
                     List<BitacoraSalida> list = new List<BitacoraSalida>();
 
@@ -67,15 +66,14 @@ namespace API_ShopColibri.Controllers
                 }
                 else
                 {
-                    var query = (from b in _context.BitacoraSalidas
-                                 where (b.Fecha >= inicio && b.Fecha <= final) && b.ObjetoRef.Contains(producto)
-                                 select new
-                                 {
+                    var query = _context.BitacoraSalidas.Where(b => b.Fecha.Date.CompareTo(inicio) >= 0 && b.Fecha.Date.CompareTo(final) <= 0 && b.ObjetoRef.Contains(producto))
+                        .Select(b => new
+                        {
                                      fecha = b.Fecha,
                                      objetoRef = b.ObjetoRef,
                                      salida = b.Salida,
                                      id = b.Id
-                                 }).ToList();
+                        }).ToList();
 
                     List<BitacoraSalida> list = new List<BitacoraSalida>();
 

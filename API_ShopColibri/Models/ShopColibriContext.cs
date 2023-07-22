@@ -47,7 +47,7 @@ public partial class ShopColibriContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("SERVER=.\\MSSQLSERVER02; DATABASE=ShopColibri;INTEGRATED SECURITY=TRUE; Encrypt=False; User Id=;Password=");
+        => optionsBuilder.UseSqlServer("SERVER=ShopColibri.mssql.somee.com; DATABASE=ShopColibri;INTEGRATED SECURITY=FALSE; Encrypt=False; User Id=ShopColibri_SQLLogin_1;Password=3u3axsvgmy");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

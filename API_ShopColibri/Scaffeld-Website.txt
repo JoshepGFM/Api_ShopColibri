@@ -1,0 +1,1 @@
+Scaffold-DbContext -f "SERVER=ShopColibri.mssql.somee.com; DATABASE=ShopColibri;INTEGRATED SECURITY=FALSE; Encrypt=False; User Id=ShopColibri_SQLLogin_1;Password=3u3axsvgmy" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models

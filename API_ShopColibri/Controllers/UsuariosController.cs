@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Net;
 using Microsoft.AspNetCore.JsonPatch;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 
 namespace API_ShopColibri.Controllers
 {
@@ -373,9 +374,12 @@ namespace API_ShopColibri.Controllers
             {
                 return NotFound();
             }
-            if (usuario.TusuarioId == 1)
+            if (usuario.TusuarioId == 1 || usuario.TusuarioId == 2)
             {
-               Dv.RefreshToken();
+                if (!Dv.RefreshToken())
+                {
+                    return Unauthorized("No se ingreso al Drive API"); 
+                }
             }
 
             return usuario;

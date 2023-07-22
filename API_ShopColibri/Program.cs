@@ -7,6 +7,7 @@ using Google.Apis.Drive.v3;
 using Google.Apis.Services;
 using Google.Apis.Util.Store;
 using System.Timers;
+using Cqrs.Hosts;
 
 internal class Program
 {
@@ -46,6 +47,7 @@ internal class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
         app.UseRouting();
 
         app.UseAuthorization();
